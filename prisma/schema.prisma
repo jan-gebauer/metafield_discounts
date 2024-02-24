@@ -20,3 +20,32 @@ model Session {
   accessToken String
   userId      BigInt?
 }
+
+model Item {
+  id        Int       @id @default(autoincrement())
+  handle    String    @unique
+  title     String
+}
+
+model NamespaceKey {
+  id        Int       @id @default(autoincrement())
+  namespace String    @unique
+  key       String @unique
+}
+
+model Metafield {
+  id                Int       @id @default(autoincrement())
+  item              Item      @relation(fields: [item_id], references: [id])
+  item_id           Int
+  namespaceKey      NamespaceKey @relation(fields: [namespace_key_id], references: [id])
+  namespace_key_id  Int
+  value             String
+  type              MetafieldType @relation(fields: [type_id], references: [id])
+  type_id           Int
+  description       String?
+}
+
+model MetafieldType {
+  id        Int       @id @default(autoincrement())
+  type      String    @unique
+}

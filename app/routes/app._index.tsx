@@ -83,6 +83,8 @@ export default function Index() {
   }, [productId]);
   const generateProduct = () => submit({}, { replace: true, method: "POST" });
 
+  console.log(actionData)
+
   return (
     <Page>
       <ui-title-bar title="Remix app template">
