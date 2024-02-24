@@ -22,30 +22,33 @@ model Session {
 }
 
 model Item {
-  id        Int       @id @default(autoincrement())
-  handle    String    @unique
+  id        Int         @id
+  handle    String      @unique
   title     String
+  Metafield Metafield[]
 }
 
 model NamespaceKey {
-  id        Int       @id @default(autoincrement())
-  namespace String    @unique
-  key       String @unique
+  id        Int         @id
+  namespace String      @unique
+  key       String      @unique
+  Metafield Metafield[]
 }
 
 model Metafield {
-  id                Int       @id @default(autoincrement())
-  item              Item      @relation(fields: [item_id], references: [id])
-  item_id           Int
-  namespaceKey      NamespaceKey @relation(fields: [namespace_key_id], references: [id])
-  namespace_key_id  Int
-  value             String
-  type              MetafieldType @relation(fields: [type_id], references: [id])
-  type_id           Int
-  description       String?
+  id               Int           @id
+  item             Item          @relation(fields: [item_id], references: [id])
+  item_id          Int
+  namespaceKey     NamespaceKey  @relation(fields: [namespace_key_id], references: [id])
+  namespace_key_id Int
+  value            String
+  type             MetafieldType @relation(fields: [type_id], references: [id])
+  type_id          Int
+  description      String?
 }
 
 model MetafieldType {
-  id        Int       @id @default(autoincrement())
-  type      String    @unique
+  id        Int         @id
+  type      String      @unique
+  Metafield Metafield[]
 }
