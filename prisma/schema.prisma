@@ -22,33 +22,19 @@ model Session {
 }
 
 model Item {
-  id        Int         @id
+  id        String         @id
   handle    String      @unique
   title     String
   Metafield Metafield[]
 }
 
-model NamespaceKey {
-  id        Int         @id
-  namespace String      @unique
-  key       String      @unique
-  Metafield Metafield[]
-}
-
 model Metafield {
-  id               Int           @id
+  id               String           @id
   item             Item          @relation(fields: [item_id], references: [id])
-  item_id          Int
-  namespaceKey     NamespaceKey  @relation(fields: [namespace_key_id], references: [id])
-  namespace_key_id Int
+  item_id          String
+  namespace String      
+  key       String     
   value            String
-  type             MetafieldType @relation(fields: [type_id], references: [id])
-  type_id          Int
+  type             String
   description      String?
-}
-
-model MetafieldType {
-  id        Int         @id
-  type      String      @unique
-  Metafield Metafield[]
 }
