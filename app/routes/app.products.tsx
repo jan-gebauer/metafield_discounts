@@ -95,6 +95,7 @@ export default function ProductsPage() {
                 <TextField label="Binding mount" value={binidingMountField} onChange={setBindingMountField} autoComplete="off" />
                 <Button submit>Generate a product with metafield</Button>
                 <Button onClick={() => navigate('/app/products/persist')}>Persist</Button>
+                <Button onClick={() => navigate('/app/products/discount')}>Create a discount</Button>
               </Form>
               <Outlet />
             </BlockStack>

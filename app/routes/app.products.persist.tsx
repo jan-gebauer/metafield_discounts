@@ -55,11 +55,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       metafields: metafields
     }
   })
-  console.log(itemsWithMetafields)
   itemsWithMetafields.forEach(async (itemWithMetafields: { item: Item, metafields: Metafield[] }) => {
-    // console.log(itemWithMetafields)
-    // console.log(itemWithMetafields.item)
-    // console.log(itemWithMetafields.metafields)
     const res = await prisma.item.create({
       data: {
         id: itemWithMetafields.item.id,
