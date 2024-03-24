@@ -1,3 +1,28 @@
-# This file stores configurations for your Shopify app.
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-scopes = "write_products"
+client_id = "d63795b18383bbb6a9c746f28913a79c"
+name = "discounterY"
+application_url = "https://travesti-av-university-experiences.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "thockthockstore.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_discounts,write_products"
+
+[auth]
+redirect_urls = [
+  "https://travesti-av-university-experiences.trycloudflare.com/auth/callback",
+  "https://travesti-av-university-experiences.trycloudflare.com/auth/shopify/callback",
+  "https://travesti-av-university-experiences.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-01"
+
+[pos]
+embedded = false

@@ -1,10 +1,10 @@
 export const createDiscount = async ({
-    admin,
+  admin,
 }: {
-    admin: any;
+  admin: any;
 }) => {
-    return await admin.graphql(
-        `#graphql
+  return await admin.graphql(
+    `#graphql
   mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomaticBasicInput!) {
     discountAutomaticBasicCreate(automaticBasicDiscount: $automaticBasicDiscount) {
       automaticDiscountNode {
@@ -30,19 +30,27 @@ export const createDiscount = async ({
       }
     }
   }`,
-        {
-            variables: {
-                "automaticBasicDiscount": {
-                    "title": "50% off",
-                    "startsAt": "2023-06-21T00:00:00Z",
-                    "endsAt": null,
-                    "customerGets": {
-                        "value": {
-                            "percentage": 50.0,
-                        }
-                    }
-                }
+    {
+      variables: {
+        "automaticBasicDiscount": {
+          "title": "50% off",
+          "startsAt": "2023-06-21T00:00:00Z",
+          "endsAt": null,
+          "customerGets": {
+            "items": {
+              "all": true
             },
-        },
-    )
+            "value": {
+              "percentage": 0.5,
+            }
+          },
+          "minimumRequirement": {
+            "quantity": {
+              "greaterThanOrEqualToQuantity": "1"
+            }
+          }
+        }
+      },
+    },
+  )
 };

@@ -27,6 +27,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function DiscountPage() {
   const data: any = useLoaderData();
+  console.log(data)
 
   return (
     null

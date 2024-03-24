@@ -9,6 +9,8 @@ import {
   Button,
   TextField,
   Form,
+  FormLayout,
+  Grid,
 } from "@shopify/polaris";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
@@ -75,6 +77,7 @@ export default function ProductsPage() {
   const navigate = useNavigate()
   const submit = useSubmit()
   const [binidingMountField, setBindingMountField] = useState("");
+  const [metafieldField, setMetafieldField] = useState("");
 
   return (
     <Page>
@@ -92,10 +95,20 @@ export default function ProductsPage() {
                 submit({ bindingMount: binidingMountField }, { replace: true, method: "POST" })
                 // setCustomField("")
               }}>
-                <TextField label="Binding mount" value={binidingMountField} onChange={setBindingMountField} autoComplete="off" />
-                <Button submit>Generate a product with metafield</Button>
-                <Button onClick={() => navigate('/app/products/persist')}>Persist</Button>
-                <Button onClick={() => navigate('/app/products/discount')}>Create a discount</Button>
+                <FormLayout>
+                  <TextField label="Binding mount" value={binidingMountField} onChange={setBindingMountField} autoComplete="off" />
+                  <Button submit>Generate a product with metafield</Button>
+                  <Button onClick={() => navigate('/app/products/persist')}>Persist</Button>
+                </FormLayout>
+              </Form>
+              <Button onClick={() => navigate('/app/products/discount')}>Create a discount</Button>
+              <Form onSubmit={() => {
+                // submit({ bindingMount: binidingMountField }, { replace: true, method: "POST" })
+              }}>
+                <FormLayout>
+                  <TextField label="Target metafield" value={metafieldField} onChange={setMetafieldField} autoComplete="off" />
+                  <Button submit>Create a discount for metafield</Button>
+                </FormLayout>
               </Form>
               <Outlet />
             </BlockStack>
