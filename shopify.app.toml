@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://travesti-av-university-experiences.trycloudflare.com"
+application_url = "https://unsubscribe-urls-weight-expedia.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://travesti-av-university-experiences.trycloudflare.com/auth/callback",
-  "https://travesti-av-university-experiences.trycloudflare.com/auth/shopify/callback",
-  "https://travesti-av-university-experiences.trycloudflare.com/api/auth/callback"
+  "https://unsubscribe-urls-weight-expedia.trycloudflare.com/auth/callback",
+  "https://unsubscribe-urls-weight-expedia.trycloudflare.com/auth/shopify/callback",
+  "https://unsubscribe-urls-weight-expedia.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
