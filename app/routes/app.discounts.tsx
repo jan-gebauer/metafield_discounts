@@ -15,9 +15,13 @@ import {
 } from "@shopify/polaris";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
+import DiscountedProducts from "./app.discounts/DiscountedProducts";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     await authenticate.admin(request);
+
+
+    // load all the products
 
     return null;
 };
@@ -53,7 +57,7 @@ export default function ProductsPage() {
                                     <Button submit>Create a discount for metafield</Button>
                                 </FormLayout>
                             </Form> */}
-                            <Button onClick={() => navigate(`/app/products/foo`)}>Get products</Button>
+                            <Button onClick={() => navigate(`/app/discounts/new`)}>Create a discount</Button>
                             {/* how do I update the number of items with discout? Using a loader? */}
                             {/* Do I make a new  */}
 
@@ -70,6 +74,7 @@ export default function ProductsPage() {
                                 -> refresh might not even be necessary as the overview allegedly might revalidate on the action submission
                             */}
                             <Outlet />
+                            <DiscountedProducts data={"test"} url={"/test"} />
                         </BlockStack>
                     </Card>
                 </Layout.Section>
