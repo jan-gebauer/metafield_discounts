@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://speaks-soup-tribune-exec.trycloudflare.com"
+application_url = "https://approaches-emerald-death-disc.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://speaks-soup-tribune-exec.trycloudflare.com/auth/callback",
-  "https://speaks-soup-tribune-exec.trycloudflare.com/auth/shopify/callback",
-  "https://speaks-soup-tribune-exec.trycloudflare.com/api/auth/callback"
+  "https://approaches-emerald-death-disc.trycloudflare.com/auth/callback",
+  "https://approaches-emerald-death-disc.trycloudflare.com/auth/shopify/callback",
+  "https://approaches-emerald-death-disc.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
