@@ -1,6 +1,6 @@
 import { Item, Metafield } from "@prisma/client";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { json, useSubmit } from "@remix-run/react";
+import { useSubmit } from "@remix-run/react";
 import { BlockStack, Button, Card, Form, FormLayout, Layout, Page, TextField } from "@shopify/polaris";
 import { getProductsUpdateAfter } from "graphql/productQueries";
 import { useState } from "react";

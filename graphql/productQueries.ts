@@ -8,7 +8,7 @@ export const getProducts = async ({
   admin: AdminApiContext<RestResources>;
   nextCursorParam: string | null;
 }) => {
-  console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
+  console.log("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
   let response = await admin.graphql(
     `#graphql
       query products($nextCursor: String) {
@@ -48,8 +48,8 @@ export const getProducts = async ({
     },
   );
 
-  console.log(response.statusText)
-  return response
+  console.log(response.statusText);
+  return response;
 };
 
 export const getProductsLastPage = async ({
@@ -59,7 +59,7 @@ export const getProductsLastPage = async ({
   admin: any;
   previousCursorParam: string | null;
 }) => {
-  console.log("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
+  console.log("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
   const response = await admin.graphql(
     `#graphql
       query products($previousCursor: String) {
@@ -86,8 +86,8 @@ export const getProductsLastPage = async ({
       },
     },
   );
-  console.log(response.statusText)
-  return response
+  console.log(response.statusText);
+  return response;
 };
 
 export const getProduct = async ({
@@ -187,11 +187,11 @@ export const getProductLastPage = async ({
 export const getProductsUpdateAfter = async ({
   admin,
   nextCursorParam,
-  query
+  query,
 }: {
   admin: any;
   nextCursorParam: string | null;
-  query: string
+  query: string;
 }) => {
   return await admin.graphql(
     `#graphql
@@ -229,18 +229,23 @@ export const getProductsUpdateAfter = async ({
     {
       variables: {
         nextCursor: nextCursorParam,
-        query: query
+        query: query,
       },
     },
   );
 };
 
 export const createProductWithMetafield = async ({
-  admin, color, metafieldKey, metafieldValue
+  admin,
+  color,
+  metafieldKey,
+  metafieldValue,
 }: {
-  admin: AdminApiContext<RestResources>, color: string, metafieldKey: string, metafieldValue: string
+  admin: AdminApiContext<RestResources>;
+  color: string;
+  metafieldKey: string;
+  metafieldValue: string;
 }) => {
-
   return await admin.graphql(
     `#graphql
       mutation createProductMetafields($input: ProductInput!) {
@@ -263,14 +268,16 @@ export const createProductWithMetafield = async ({
       variables: {
         input: {
           title: `${color} Snowboard`,
-          metafields: [{
-            namespace: "test_data",
-            key: metafieldKey,
-            type: "single_line_text_field",
-            value: metafieldValue
-          }]
+          metafields: [
+            {
+              namespace: "test_data",
+              key: metafieldKey,
+              type: "single_line_text_field",
+              value: metafieldValue,
+            },
+          ],
         },
       },
-    }
+    },
   );
 };

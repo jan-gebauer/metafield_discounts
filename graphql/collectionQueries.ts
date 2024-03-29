@@ -1,13 +1,12 @@
-
 export const getCollection = async ({
-    admin,
-    nextCursorParam,
+  admin,
+  nextCursorParam,
 }: {
-    admin: any;
-    nextCursorParam: string | null;
+  admin: any;
+  nextCursorParam: string | null;
 }) => {
-    return await admin.graphql(
-        `#graphql
+  return await admin.graphql(
+    `#graphql
       query products($nextCursor: String) {
         products(first: 10, reverse: true, after: $nextCursor) {
           edges {
@@ -26,10 +25,10 @@ export const getCollection = async ({
           
         }
       }`,
-        {
-            variables: {
-                nextCursor: nextCursorParam,
-            },
-        },
-    );
+    {
+      variables: {
+        nextCursor: nextCursorParam,
+      },
+    },
+  );
 };
