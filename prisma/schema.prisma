@@ -37,8 +37,8 @@ model Metafield {
   value       String
   type        String
   description String?
-  discount    Discount @relation(fields: [discount_id], references: [id])
-  discount_id String
+  discount    Discount? @relation(fields: [discount_id], references: [id])
+  discount_id String?
 }
 
 model Discount {

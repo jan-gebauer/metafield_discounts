@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://assessment-experiences-brook-virus.trycloudflare.com"
+application_url = "https://album-software-roland-terrain.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://assessment-experiences-brook-virus.trycloudflare.com/auth/callback",
-  "https://assessment-experiences-brook-virus.trycloudflare.com/auth/shopify/callback",
-  "https://assessment-experiences-brook-virus.trycloudflare.com/api/auth/callback"
+  "https://album-software-roland-terrain.trycloudflare.com/auth/callback",
+  "https://album-software-roland-terrain.trycloudflare.com/auth/shopify/callback",
+  "https://album-software-roland-terrain.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
