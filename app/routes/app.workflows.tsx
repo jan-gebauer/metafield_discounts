@@ -16,6 +16,9 @@ import { createProductWithMetafield as createProductWithTextMetafield } from "gr
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
 
+const metafieldKey = "bindingMount";
+const metafieldName = "Binding Mount";
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
 
@@ -25,7 +28,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
 
-  const metafieldKey = "bindingMount";
   const requestBody = (await request.text()) || ""
   const params = new URLSearchParams(requestBody)
   const metafieldValue = params.get(metafieldKey)
@@ -54,7 +56,7 @@ export default function ProductsPage() {
 
   return (
     <Page>
-      <ui-title-bar title="Additional page" />
+      <ui-title-bar title="Generate a product with metafield" />
       <Layout>
         <Layout.Section>
           <Card>
@@ -63,7 +65,7 @@ export default function ProductsPage() {
                 submit({ bindingMount: binidingMountField }, { replace: true, method: "POST" })
               }}>
                 <FormLayout>
-                  <TextField label="Binding mount" value={binidingMountField} onChange={setBindingMountField} autoComplete="off" />
+                  <TextField label={metafieldName} value={binidingMountField} onChange={setBindingMountField} autoComplete="off" />
                   <Button submit>Generate a product with metafield</Button>
                 </FormLayout>
               </Form>
