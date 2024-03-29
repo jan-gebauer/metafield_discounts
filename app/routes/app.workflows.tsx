@@ -74,10 +74,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 
 export default function ProductsPage() {
-  const navigate = useNavigate()
   const submit = useSubmit()
   const [binidingMountField, setBindingMountField] = useState("");
-  const [metafieldField, setMetafieldField] = useState("");
 
   return (
     <Page>
@@ -86,28 +84,12 @@ export default function ProductsPage() {
         <Layout.Section>
           <Card>
             <BlockStack gap="300">
-              <Text as="p" variant="bodyMd">
-                This is a test.
-              </Text>
-              <Button onClick={() => navigate(`/app/products/foo`)}>Get products</Button>
-              <Button onClick={() => navigate('/app/products')}>Reset</Button>
               <Form onSubmit={() => {
                 submit({ bindingMount: binidingMountField }, { replace: true, method: "POST" })
-                // setCustomField("")
               }}>
                 <FormLayout>
                   <TextField label="Binding mount" value={binidingMountField} onChange={setBindingMountField} autoComplete="off" />
                   <Button submit>Generate a product with metafield</Button>
-                  <Button onClick={() => navigate('/app/products/persist')}>Persist</Button>
-                </FormLayout>
-              </Form>
-              <Button onClick={() => navigate('/app/products/discount')}>Create a discount</Button>
-              <Form onSubmit={() => {
-                // submit({ bindingMount: binidingMountField }, { replace: true, method: "POST" })
-              }}>
-                <FormLayout>
-                  <TextField label="Target metafield" value={metafieldField} onChange={setMetafieldField} autoComplete="off" />
-                  <Button submit>Create a discount for metafield</Button>
                 </FormLayout>
               </Form>
               <Outlet />

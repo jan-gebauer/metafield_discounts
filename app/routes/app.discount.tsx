@@ -14,10 +14,7 @@ import { authenticate } from "~/shopify.server";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
 
-  console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
-
   const response = await createDiscount({ admin });
-  console.log(response)
   if (!response) {
     return null
   }
