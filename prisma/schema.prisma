@@ -22,19 +22,30 @@ model Session {
 }
 
 model Item {
-  id        String         @id
+  id        String      @id
   handle    String      @unique
   title     String
   Metafield Metafield[]
 }
 
 model Metafield {
-  id               String           @id
-  item             Item          @relation(fields: [item_id], references: [id])
-  item_id          String
-  namespace String      
-  key       String     
-  value            String
-  type             String
-  description      String?
+  id          String   @id
+  item        Item     @relation(fields: [item_id], references: [id])
+  item_id     String
+  namespace   String
+  key         String
+  value       String
+  type        String
+  description String?
+  discount    Discount @relation(fields: [discount_id], references: [id])
+  discount_id String
+}
+
+model Discount {
+  id         String      @id
+  title      String
+  percentage BigInt
+  summary    String
+  startsAt   String
+  Metafield  Metafield[]
 }
