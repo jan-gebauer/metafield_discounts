@@ -12,6 +12,7 @@ import {
   FormLayout,
   Grid,
 } from "@shopify/polaris";
+import { createProductWithMetafield as createProductWithTextMetafield } from "graphql/productQueries";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
 
@@ -24,46 +25,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
 
-
+  const metafieldKey = "bindingMount";
   const requestBody = (await request.text()) || ""
   const params = new URLSearchParams(requestBody)
-  const actionedCustomField = params.get("bindingMount")
+  const metafieldValue = params.get(metafieldKey)
+  if (!metafieldValue) {
+    return json({
+      product: null
+    })
+  }
 
   const color = ["Crimson", "Cyan", "Emerald", "Pink"][
     Math.floor(Math.random() * 4)
   ];
-  const response = await admin.graphql(
-    `#graphql
-      mutation createProductMetafields($input: ProductInput!) {
-        productCreate(input: $input) {
-          product {
-            id
-            metafields(first: 3) {
-              edges {
-                node {
-                  id
-                  key
-                  value
-                }
-              }
-            }
-          }
-        }
-      }`,
-    {
-      variables: {
-        input: {
-          title: `${color} Snowboard`,
-          metafields: [{
-            namespace: "test_data",
-            key: "binding_mount",
-            type: "single_line_text_field",
-            value: actionedCustomField
-          }]
-        },
-      },
-    }
-  );
+  const response = await createProductWithTextMetafield({ admin, color, metafieldKey, metafieldValue });
   const responseJson = await response.json();
 
   return json({
