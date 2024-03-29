@@ -44,8 +44,6 @@ model Metafield {
 model Discount {
   id         String      @id
   title      String
-  percentage BigInt
   summary    String
-  startsAt   String
   Metafield  Metafield[]
 }
