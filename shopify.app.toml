@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://album-software-roland-terrain.trycloudflare.com"
+application_url = "https://indices-vital-organization-composition.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://album-software-roland-terrain.trycloudflare.com/auth/callback",
-  "https://album-software-roland-terrain.trycloudflare.com/auth/shopify/callback",
-  "https://album-software-roland-terrain.trycloudflare.com/api/auth/callback"
+  "https://indices-vital-organization-composition.trycloudflare.com/auth/callback",
+  "https://indices-vital-organization-composition.trycloudflare.com/auth/shopify/callback",
+  "https://indices-vital-organization-composition.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

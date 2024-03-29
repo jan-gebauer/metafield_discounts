@@ -1,6 +1,6 @@
 import { Item, Metafield } from "@prisma/client";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { useSubmit } from "@remix-run/react";
+import { Outlet, useNavigate, useSubmit } from "@remix-run/react";
 import {
   BlockStack,
   Button,
@@ -108,13 +108,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return "blahblah";
 };
 
-export default function SyncProductsPage() {
+export default function SyncDatabasesPage() {
   const submit = useSubmit();
+  const navigate = useNavigate();
   const [minimumDate, setMinimumDate] = useState("");
 
   return (
     <Page>
-      <ui-title-bar title="Product sync" />
+      <ui-title-bar title="Database sync" />
       <Layout>
         <Layout.Section>
           <Card>
@@ -135,6 +136,10 @@ export default function SyncProductsPage() {
                   <Button submit>Sync products from the given date</Button>
                 </FormLayout>
               </Form>
+              <Button onClick={() => navigate("/app/sync/discounts")}>
+                Sync discounts
+              </Button>
+              <Outlet />
             </BlockStack>
           </Card>
         </Layout.Section>

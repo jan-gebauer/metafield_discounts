@@ -184,6 +184,48 @@ export const getProductLastPage = async ({
   );
 };
 
+export const getDiscountsUpdatedAfter = async ({
+  admin,
+  nextCursorParam,
+  query,
+}: {
+  admin: any;
+  nextCursorParam: string | null;
+  query: string;
+}) => {
+  return await admin.graphql(
+    `#graphql
+      query automaticDiscountNodes($nextCursor: String) {
+        automaticDiscountNodes(first: 2, reverse: true, after: $nextCursor, query: "updated_at:>=01-01-2022") {
+          edges {
+            node {
+              id
+              automaticDiscount {
+                ... on DiscountAutomaticBasic {
+                  title
+                  summary
+                }
+              }
+            }
+          },
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          
+        }
+      }`,
+    {
+      variables: {
+        nextCursor: nextCursorParam,
+        query: query,
+      },
+    },
+  );
+};
+
 export const getProductsUpdateAfter = async ({
   admin,
   nextCursorParam,
