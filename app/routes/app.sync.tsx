@@ -139,6 +139,9 @@ export default function SyncDatabasesPage() {
               <Button onClick={() => navigate("/app/sync/discounts")}>
                 Sync discounts
               </Button>
+              <Button onClick={() => navigate("/app/sync/metafields")}>
+                Sync metafields
+              </Button>
               <Outlet />
             </BlockStack>
           </Card>

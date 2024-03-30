@@ -28,9 +28,16 @@ model Item {
   Metafield Metafield[]
 }
 
+model MetafieldDefinition {
+  id                 String @id
+  metafieldName      String
+  metafieldNamespace String
+  metafieldKey       String
+}
+
 model Metafield {
-  id          String   @id
-  item        Item     @relation(fields: [item_id], references: [id])
+  id          String    @id
+  item        Item      @relation(fields: [item_id], references: [id])
   item_id     String
   namespace   String
   key         String
@@ -42,8 +49,8 @@ model Metafield {
 }
 
 model Discount {
-  id         String      @id
-  title      String
-  summary    String
-  Metafield  Metafield[]
+  id        String      @id
+  title     String
+  summary   String
+  Metafield Metafield[]
 }
