@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://hearings-roads-desire-spirituality.trycloudflare.com"
+application_url = "https://messaging-russian-cell-rachel.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://hearings-roads-desire-spirituality.trycloudflare.com/auth/callback",
-  "https://hearings-roads-desire-spirituality.trycloudflare.com/auth/shopify/callback",
-  "https://hearings-roads-desire-spirituality.trycloudflare.com/api/auth/callback"
+  "https://messaging-russian-cell-rachel.trycloudflare.com/auth/callback",
+  "https://messaging-russian-cell-rachel.trycloudflare.com/auth/shopify/callback",
+  "https://messaging-russian-cell-rachel.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -30,9 +30,9 @@ model Item {
 
 model MetafieldDefinition {
   id                 String      @id
-  metafieldName      String
-  metafieldNamespace String
-  metafieldKey       String
+  name      String
+  namespace String
+  key       String
   Metafield          Metafield[]
 }
 
@@ -41,7 +41,7 @@ model Metafield {
   item                  Item                @relation(fields: [item_id], references: [id])
   item_id               String
   metafieldDefinition   MetafieldDefinition @relation(fields: [metafieldDefinitionId], references: [id])
-  metafieldDefinitionId String
+  metafieldDefinitionId String              @map("metafield_definition_id")
   value                 String
   type                  String
   description           String?

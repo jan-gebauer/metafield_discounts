@@ -1,6 +1,6 @@
-import { Item, Metafield, MetafieldDefinition } from "@prisma/client";
+import { MetafieldDefinition } from "@prisma/client";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { Outlet, useNavigate, useSubmit } from "@remix-run/react";
+import { useSubmit } from "@remix-run/react";
 import {
   BlockStack,
   Button,
@@ -12,7 +12,6 @@ import {
   TextField,
 } from "@shopify/polaris";
 import { getMetafieldsUpdatedAfter } from "graphql/metafieldQueries";
-import { getProductsUpdateAfter } from "graphql/productQueries";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
 
@@ -65,9 +64,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     metafieldDefinitions.map((edge: any) => {
       return {
         id: edge.node.id,
-        metafieldName: edge.node.name,
-        metafieldNamespace: edge.node.namespace,
-        metafieldKey: edge.node.key,
+        name: edge.node.name,
+        namespace: edge.node.namespace,
+        key: edge.node.key,
       };
     });
 

@@ -74,7 +74,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         handle: edge.node.handle,
       };
       const metafieldNodes = edge.node.metafields.edges;
+      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
       console.log(metafieldNodes);
+      // check if the MetafieldDefinition exists
+      // if so, get the id
+      // create the metafield
+      // if not, add null
+      // filter out metafields with null?
+      // continue?
       const metafields = metafieldNodes.map((metafield: any) => {
         return metafield.node;
       });
@@ -88,20 +95,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   console.log(processedItems);
   processedItems.forEach(
     async (processedItem: { item: Item; metafields: Metafield[] }) => {
-      const res = await prisma.item.create({
-        data: {
-          id: processedItem.item.id,
-          title: processedItem.item.title,
-          handle: processedItem.item.handle,
-          Metafield: {
-            create: processedItem.metafields,
-          },
-        },
-        include: {
-          Metafield: true,
-        },
-      });
-      console.log(res);
+      console.log(processedItem.metafields);
+      // const res = await prisma.item.create({
+      //   data: {
+      //     id: processedItem.item.id,
+      //     title: processedItem.item.title,
+      //     handle: processedItem.item.handle,
+      //     Metafield: {
+      //       create: processedItem.metafields,
+      //     },
+      //   },
+      //   include: {
+      //     Metafield: true,
+      //   },
+      // });
+      // console.log(res);
     },
   );
 

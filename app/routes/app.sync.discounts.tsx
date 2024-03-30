@@ -11,10 +11,7 @@ import {
   Page,
   TextField,
 } from "@shopify/polaris";
-import {
-  getDiscountsUpdatedAfter,
-  getProductsUpdateAfter,
-} from "graphql/productQueries";
+import { getDiscountsUpdatedAfter } from "graphql/discountQueries";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
 
