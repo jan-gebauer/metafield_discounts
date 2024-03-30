@@ -29,23 +29,24 @@ model Item {
 }
 
 model MetafieldDefinition {
-  id                 String @id
+  id                 String      @id
   metafieldName      String
   metafieldNamespace String
   metafieldKey       String
+  Metafield          Metafield[]
 }
 
 model Metafield {
-  id          String    @id
-  item        Item      @relation(fields: [item_id], references: [id])
-  item_id     String
-  namespace   String
-  key         String
-  value       String
-  type        String
-  description String?
-  discount    Discount? @relation(fields: [discount_id], references: [id])
-  discount_id String?
+  id                    String              @id
+  item                  Item                @relation(fields: [item_id], references: [id])
+  item_id               String
+  metafieldDefinition   MetafieldDefinition @relation(fields: [metafieldDefinitionId], references: [id])
+  metafieldDefinitionId String
+  value                 String
+  type                  String
+  description           String?
+  discount              Discount?           @relation(fields: [discount_id], references: [id])
+  discount_id           String?
 }
 
 model Discount {
