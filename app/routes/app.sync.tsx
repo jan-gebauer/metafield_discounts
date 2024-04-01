@@ -1,4 +1,4 @@
-import { Item, Metafield } from "@prisma/client";
+import { Item, Metafield, MetafieldDefinition } from "@prisma/client";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { Outlet, useNavigate, useSubmit } from "@remix-run/react";
 import {
@@ -14,6 +14,17 @@ import {
 import { getProductsUpdateAfter } from "graphql/productQueries";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
+
+type MetafieldQL = {
+  node: {
+    id: string;
+    namespace: string;
+    key: string;
+    value: string;
+    type: string;
+    description: string | null;
+  };
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
@@ -31,17 +42,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     query: minimumDate.toString(),
     nextCursorParam: null,
   });
-  console.log(response);
   let responseJson = await response.json();
-  console.log(responseJson.data.products.pageInfo.hasNextPage);
-  console.log(responseJson.data.products.edges);
 
-  // here is what will happen
-  // make the initial call
-  // have a loop
-  // save the data to an array
-  // keep checking for next page
-  // if there is one, call the thing again
   let items: any[] = [];
   items = items.concat(responseJson.data.products.edges);
   while (responseJson.data.products.pageInfo.hasNextPage) {
@@ -54,62 +56,102 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     items = items.concat(responseJson.data.products.edges);
   }
 
-  console.log(items.length);
-
-  items.forEach((item: any) => {
-    console.log(item.node.metafields);
-  });
-
-  // persist the data in the database
   const itemsWithMetafields = items.filter(
     (item: any) => item.node.metafields.edges.length > 0,
   );
-  console.log(itemsWithMetafields.length);
   const processedItems: { item: Item; metafields: Metafield[] }[] =
-    itemsWithMetafields.map((edge: any) => {
-      console.log(edge.node);
-      const item: Item = {
-        id: edge.node.id,
-        title: edge.node.title,
-        handle: edge.node.handle,
-      };
-      const metafieldNodes = edge.node.metafields.edges;
-      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-      console.log(metafieldNodes);
-      // check if the MetafieldDefinition exists
-      // if so, get the id
-      // create the metafield
-      // if not, add null
-      // filter out metafields with null?
-      // continue?
-      const metafields = metafieldNodes.map((metafield: any) => {
-        return metafield.node;
-      });
-      console.log(metafields);
-      return {
-        item: item,
-        metafields: metafields,
-      };
-    });
+    await Promise.all(
+      itemsWithMetafields.map(async (edge: any) => {
+        const item: Item = {
+          id: edge.node.id,
+          title: edge.node.title,
+          handle: edge.node.handle,
+        };
+        const metafieldNodes: MetafieldQL[] = edge.node.metafields.edges;
+        const possibleMetafields: {
+          metafield: MetafieldQL | null;
+          metafieldDefinition: MetafieldDefinition | null;
+        }[] = await Promise.all(
+          metafieldNodes.map(
+            async (
+              metafield: MetafieldQL,
+            ): Promise<{
+              metafield: MetafieldQL | null;
+              metafieldDefinition: MetafieldDefinition | null;
+            }> => await getMetafieldAndDefinition(metafield),
+          ),
+        );
 
+        const filteredMetafields: {
+          metafield: MetafieldQL;
+          metafieldDefinition: MetafieldDefinition;
+        }[] = possibleMetafields.filter(
+          (metafieldAndDefinition: {
+            metafield: MetafieldQL | null;
+            metafieldDefinition: MetafieldDefinition | null;
+          }): metafieldAndDefinition is {
+            metafield: MetafieldQL;
+            metafieldDefinition: MetafieldDefinition;
+          } => {
+            return metafieldAndDefinition.metafield !== null;
+          },
+        );
+
+        // filter out metafields with null?
+        // continue?
+        const metafields: Metafield[] = filteredMetafields.map(
+          (metafieldAndDefinition: {
+            metafield: MetafieldQL;
+            metafieldDefinition: MetafieldDefinition;
+          }): any => {
+            return {
+              id: metafieldAndDefinition.metafield.node.id,
+              metafieldDefinitionId:
+                metafieldAndDefinition.metafieldDefinition.id,
+              value: metafieldAndDefinition.metafield.node.value,
+              type: metafieldAndDefinition.metafield.node.type,
+              description: metafieldAndDefinition.metafield.node.description,
+            };
+          },
+        );
+        // console.log(metafields);
+        return {
+          item: item,
+          metafields: metafields,
+        };
+      }),
+    );
+
+  console.log("processed items");
   console.log(processedItems);
-  processedItems.forEach(
+  // const itemsWithMetafields = processedItems.filter(
+  //   (processedItem: { item: Item; metafields: Metafield[] }) => {
+  //     return processedItem.metafields.length > 0;
+  //   },
+  // );
+  const processedItemsWithMetafields = processedItems.filter(
+    (processedItem: { item: Item; metafields: Metafield[] }) => {
+      return processedItem.metafields.length > 0;
+    },
+  );
+  processedItemsWithMetafields.forEach(
     async (processedItem: { item: Item; metafields: Metafield[] }) => {
-      console.log(processedItem.metafields);
-      // const res = await prisma.item.create({
-      //   data: {
-      //     id: processedItem.item.id,
-      //     title: processedItem.item.title,
-      //     handle: processedItem.item.handle,
-      //     Metafield: {
-      //       create: processedItem.metafields,
-      //     },
-      //   },
-      //   include: {
-      //     Metafield: true,
-      //   },
-      // });
-      // console.log(res);
+      // console.log(processedItem.item);
+      // console.log(processedItem.metafields);
+      const res = await prisma.item.create({
+        data: {
+          id: processedItem.item.id,
+          title: processedItem.item.title,
+          handle: processedItem.item.handle,
+          Metafield: {
+            create: processedItem.metafields,
+          },
+        },
+        include: {
+          Metafield: true,
+        },
+      });
+      console.log(res);
     },
   );
 
@@ -157,4 +199,22 @@ export default function SyncDatabasesPage() {
       </Layout>
     </Page>
   );
+}
+
+async function getMetafieldAndDefinition(metafield: any): Promise<{
+  metafield: MetafieldQL | null;
+  metafieldDefinition: MetafieldDefinition | null;
+}> {
+  console.log(metafield.node);
+  const metafieldDefinition = await prisma.metafieldDefinition.findFirst({
+    where: {
+      namespace: metafield.node.namespace,
+      key: metafield.node.key,
+    },
+  });
+
+  if (metafieldDefinition) {
+    return { metafield, metafieldDefinition };
+  }
+  return { metafield: null, metafieldDefinition: null };
 }

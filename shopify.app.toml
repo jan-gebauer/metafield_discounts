@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://messaging-russian-cell-rachel.trycloudflare.com"
+application_url = "https://pulling-increases-com-stuart.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://messaging-russian-cell-rachel.trycloudflare.com/auth/callback",
-  "https://messaging-russian-cell-rachel.trycloudflare.com/auth/shopify/callback",
-  "https://messaging-russian-cell-rachel.trycloudflare.com/api/auth/callback"
+  "https://pulling-increases-com-stuart.trycloudflare.com/auth/callback",
+  "https://pulling-increases-com-stuart.trycloudflare.com/auth/shopify/callback",
+  "https://pulling-increases-com-stuart.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

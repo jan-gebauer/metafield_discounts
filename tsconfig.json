@@ -19,7 +19,7 @@
       "~/*": ["./app/*"]
     },
     "types": [
-      "node", "@shopify/app-bridge-types"
+      "node", "@shopify/app-bridge-types", "jest"
     ]
   }
 }
