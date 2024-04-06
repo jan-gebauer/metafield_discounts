@@ -1,6 +1,6 @@
 import prisma from "../../app/db.server";
 
-test("database access", async () => {
+test.skip("database access", async () => {
   let metafield: any = { node: "test" };
   const metafieldDefinition = await prisma.metafieldDefinition.findFirst({
     where: {

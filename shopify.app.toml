@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://pulling-increases-com-stuart.trycloudflare.com"
+application_url = "https://textbook-wind-decade-applicable.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://pulling-increases-com-stuart.trycloudflare.com/auth/callback",
-  "https://pulling-increases-com-stuart.trycloudflare.com/auth/shopify/callback",
-  "https://pulling-increases-com-stuart.trycloudflare.com/api/auth/callback"
+  "https://textbook-wind-decade-applicable.trycloudflare.com/auth/callback",
+  "https://textbook-wind-decade-applicable.trycloudflare.com/auth/shopify/callback",
+  "https://textbook-wind-decade-applicable.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
