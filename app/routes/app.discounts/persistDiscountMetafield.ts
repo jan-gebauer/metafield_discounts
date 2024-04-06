@@ -5,14 +5,14 @@ export const persistDiscountMetafield = async ({
 }: {
   formData: FormData;
 }): Promise<TypedResponse<{}>> => {
-  const metafieldDefinitionId = formData.get("metafieldDefinition");
+  const metafieldDefinition = formData.get("metafieldDefinition");
   const metafieldValue = formData.get("metafieldValue");
   const discount = formData.get("discount");
 
-  if (!metafieldDefinitionId || !metafieldValue || !discount) {
+  if (!metafieldDefinition || !metafieldValue || !discount) {
     return json({
       error: "Missing data",
-      metafieldDefinitionId,
+      metafieldDefinitionId: metafieldDefinition,
       metafieldValue,
       discount,
     });
@@ -20,7 +20,7 @@ export const persistDiscountMetafield = async ({
 
   const result = await prisma.metafield.updateMany({
     where: {
-      metafieldDefinitionId: metafieldDefinitionId.valueOf(),
+      metafieldDefinitionId: metafieldDefinition.valueOf(),
       value: metafieldValue.valueOf(),
     },
     data: {

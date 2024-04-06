@@ -58,22 +58,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // get the data
   // update the discount by adding to the metafields
   console.log("submit");
-  console.log(
-    (await request.formData()).forEach((value, key) => {
-      console.log(key, value);
-    }),
-  );
 
-  // persistDiscountMetafield({ formData: request.formData() });
+  const formData = await request.formData();
+  formData.forEach((value, key) => {
+    console.log(key, value);
+  });
+  const result = persistDiscountMetafield({ formData: formData });
 
-  return json({});
+  return result;
 };
 
 export default function NewDiscountPage() {
   const navigate = useNavigate();
   const submit = useSubmit();
-  const [metafieldField, setMetafieldField] = useState("");
-  const [namespaceKey, setNamespaceKeyField] = useState("");
+  const [metafieldValue, setMetafieldValue] = useState("");
+  const [metafieldDefinition, setMetafieldDefinition] = useState("");
   const [discount, setDiscount] = useState("");
   const loadedData: {
     optionedDiscounts: { label: string; value: string }[];
@@ -94,7 +93,11 @@ export default function NewDiscountPage() {
               <Form
                 onSubmit={() => {
                   submit(
-                    { metafieldField, discount, namespaceKey },
+                    {
+                      metafieldValue,
+                      discount,
+                      metafieldDefinition,
+                    },
                     { replace: true, method: "POST" },
                   );
                 }}
@@ -105,13 +108,13 @@ export default function NewDiscountPage() {
                     options={
                       loadedData.optionedMetafieldDefinitions as SelectOption[]
                     }
-                    onChange={(val) => setNamespaceKeyField(val)}
-                    value={namespaceKey}
+                    onChange={(val) => setMetafieldDefinition(val)}
+                    value={metafieldDefinition}
                   />
                   <TextField
                     label="Enter a metafield value and pray"
-                    value={metafieldField}
-                    onChange={setMetafieldField}
+                    value={metafieldValue}
+                    onChange={setMetafieldValue}
                     autoComplete="off"
                   />
                   <Select

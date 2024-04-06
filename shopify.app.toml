@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://textbook-wind-decade-applicable.trycloudflare.com"
+application_url = "https://pressure-microsoft-bytes-setup.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://textbook-wind-decade-applicable.trycloudflare.com/auth/callback",
-  "https://textbook-wind-decade-applicable.trycloudflare.com/auth/shopify/callback",
-  "https://textbook-wind-decade-applicable.trycloudflare.com/api/auth/callback"
+  "https://pressure-microsoft-bytes-setup.trycloudflare.com/auth/callback",
+  "https://pressure-microsoft-bytes-setup.trycloudflare.com/auth/shopify/callback",
+  "https://pressure-microsoft-bytes-setup.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
