@@ -1,43 +1,40 @@
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { Card, BlockStack, IndexTable, Icon, Button } from "@shopify/polaris";
-import {
-  XIcon
-} from '@shopify/polaris-icons';
+import { XIcon } from "@shopify/polaris-icons";
+import { DiscountMetafields } from "../app.discounts";
 
-// this is where you would have the loading or component or something that carries the metafield-discounts
-// you would then display it in the app.discounts page
-// 
-// I think you steal what is in app.products.foo
-// 
+const buildRows = (data: DiscountMetafields[]) => {
+  const rows = data.map((discountMetafield, index) => {
+    return (
+      <IndexTable.Row
+        id={discountMetafield.discount}
+        key={discountMetafield.discount}
+        position={index}
+      >
+        <IndexTable.Cell>{discountMetafield.discount}</IndexTable.Cell>
+        <IndexTable.Cell>
+          {discountMetafield.metafieldNamespaceKey}
+        </IndexTable.Cell>
+        <IndexTable.Cell>{discountMetafield.value}</IndexTable.Cell>
+        <IndexTable.Cell>
+          <Button icon={XIcon} onClick={() => console.log("click")} />
+        </IndexTable.Cell>
+      </IndexTable.Row>
+    );
+  });
 
-const buildRows = (data: any) => {
+  return rows;
+};
 
-  // const rows = data.data.products.edges.map((edge: any, index: number) => {
-  //   return (
-  //     <IndexTable.Row id={edge.node.id} key={edge.node.id} position={index}>
-  //       <IndexTable.Cell>
-  //         {edge.node.title}
-  //       </IndexTable.Cell>
-  //     </IndexTable.Row >
-  //   )
-  // })
-
-  const rows = (
-    <IndexTable.Row id={"0"} key={0} position={0}>
-      <IndexTable.Cell>
-        test
-      </IndexTable.Cell>
-      <IndexTable.Cell>
-        <Button icon={XIcon} onClick={() => console.log("click")} />
-      </IndexTable.Cell>
-    </IndexTable.Row >)
-
-  return rows
-
-}
-
-export default function DiscountedProducts(props: { url: string, data: any }) {
-  const navigate = useNavigate()
+export default function DiscountedProducts(props: {
+  url: string;
+  data: {
+    discount: string;
+    metafieldNamespaceKey: string;
+    value: string;
+  }[];
+}) {
+  const navigate = useNavigate();
   // const pageInfo = props.data.data.products.pageInfo || null;
 
   return (
@@ -45,7 +42,12 @@ export default function DiscountedProducts(props: { url: string, data: any }) {
       <ui-title-bar title="Additional page" />
       <BlockStack gap="300">
         <IndexTable
-          headings={[{ title: "Title" }]}
+          headings={[
+            { title: "Discount" },
+            { title: "Metafield" },
+            { title: "Metafield value" },
+            { title: "Delete" },
+          ]}
           itemCount={10}
           pagination={{
             // hasNext: pageInfo.hasNextPage,
@@ -54,12 +56,12 @@ export default function DiscountedProducts(props: { url: string, data: any }) {
             hasPrevious: false,
             onNext: () => {
               // navigate(`${props.url}?nextCursor=${pageInfo.endCursor}`)
-              navigate(`${props.url}?nextCursor=foo`)
+              navigate(`${props.url}?nextCursor=foo`);
             },
             onPrevious: () => {
               // navigate(`${props.url}foo?previousCursor=${pageInfo.startCursor}`)
-              navigate(`${props.url}foo?previousCursor=bar`)
-            }
+              navigate(`${props.url}foo?previousCursor=bar`);
+            },
           }}
         >
           {buildRows(props.data)}

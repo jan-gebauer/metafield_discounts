@@ -1,15 +1,22 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
-import { Outlet, useNavigate } from "@remix-run/react";
+import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { Card, Layout, Page, BlockStack, Button } from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import DiscountedProducts from "./app.discounts/DiscountedProducts";
+import { loadDiscountMetafields } from "./app.discounts/loadDiscountMetafields";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export type DiscountMetafields = {
+  discount: string;
+  metafieldNamespaceKey: string;
+  value: string;
+};
+
+export const loader = async ({
+  request,
+}: LoaderFunctionArgs): Promise<DiscountMetafields[]> => {
   await authenticate.admin(request);
 
-  // load all the products
-
-  return null;
+  return await loadDiscountMetafields();
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -22,6 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function ProductsPage() {
   const navigate = useNavigate();
+  const discountMetafields: DiscountMetafields[] = useLoaderData();
 
   return (
     <Page>
@@ -56,7 +64,7 @@ export default function ProductsPage() {
                                 -> refresh might not even be necessary as the overview allegedly might revalidate on the action submission
                             */}
               <Outlet />
-              <DiscountedProducts data={"test"} url={"/test"} />
+              <DiscountedProducts data={discountMetafields} url={"/test"} />
             </BlockStack>
           </Card>
         </Layout.Section>
