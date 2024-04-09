@@ -18,6 +18,14 @@ export const persistDiscountMetafield = async ({
     });
   }
 
+  const persisted = await prisma.discountMetafieldUnion.create({
+    data: {
+      active: false,
+      discount_id: discount.toString(),
+      metafield_id: metafieldValue.toString(),
+    },
+  });
+
   const result = await prisma.metafield.updateMany({
     where: {
       metafieldDefinitionId: metafieldDefinition.valueOf(),

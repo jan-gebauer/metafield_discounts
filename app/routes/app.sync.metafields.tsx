@@ -77,7 +77,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         ...definition,
       },
     });
-    console.log(res);
   });
 
   return "blahblah";

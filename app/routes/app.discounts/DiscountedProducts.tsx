@@ -1,15 +1,31 @@
-import { useLoaderData, useNavigate } from "@remix-run/react";
-import { Card, BlockStack, IndexTable, Icon, Button } from "@shopify/polaris";
+import { NavigateFunction, useFetcher, useNavigate } from "@remix-run/react";
+import {
+  Card,
+  BlockStack,
+  IndexTable,
+  Button,
+  Checkbox,
+} from "@shopify/polaris";
 import { XIcon } from "@shopify/polaris-icons";
 import { DiscountMetafields } from "../app.discounts";
+import { useState } from "react";
 
-const buildRows = (data: DiscountMetafields[]) => {
+const buildRows = (
+  data: DiscountMetafields[],
+  navigate: NavigateFunction,
+  url: string,
+  toggleHandler: () => void,
+  deleteHandler: () => void,
+) => {
   const rows = data.map((discountMetafield, index) => {
     return (
       <IndexTable.Row
         id={discountMetafield.discount}
         key={discountMetafield.discount}
         position={index}
+        onClick={() =>
+          navigate(`${url}/${discountMetafield.discountMetafieldUnionId}`)
+        }
       >
         <IndexTable.Cell>{discountMetafield.discount}</IndexTable.Cell>
         <IndexTable.Cell>
@@ -17,7 +33,18 @@ const buildRows = (data: DiscountMetafields[]) => {
         </IndexTable.Cell>
         <IndexTable.Cell>{discountMetafield.value}</IndexTable.Cell>
         <IndexTable.Cell>
-          <Button icon={XIcon} onClick={() => console.log("click")} />
+          <Checkbox
+            label=""
+            checked={discountMetafield.active}
+            onChange={() => {
+              discountMetafield.active = !discountMetafield.active;
+              console.log(discountMetafield.active);
+              toggleHandler();
+            }}
+          />
+        </IndexTable.Cell>
+        <IndexTable.Cell>
+          <Button icon={XIcon} onClick={deleteHandler} />
         </IndexTable.Cell>
       </IndexTable.Row>
     );
@@ -28,14 +55,12 @@ const buildRows = (data: DiscountMetafields[]) => {
 
 export default function DiscountedProducts(props: {
   url: string;
-  data: {
-    discount: string;
-    metafieldNamespaceKey: string;
-    value: string;
-  }[];
+  data: DiscountMetafields[];
+  toggleHandler: () => void;
+  deleteHandler: () => void;
 }) {
   const navigate = useNavigate();
-  // const pageInfo = props.data.data.products.pageInfo || null;
+  const [testState, setTestState] = useState(false);
 
   return (
     <Card>
@@ -46,6 +71,7 @@ export default function DiscountedProducts(props: {
             { title: "Discount" },
             { title: "Metafield" },
             { title: "Metafield value" },
+            { title: "Toggle" },
             { title: "Delete" },
           ]}
           itemCount={10}
@@ -64,7 +90,32 @@ export default function DiscountedProducts(props: {
             },
           }}
         >
-          {buildRows(props.data)}
+          {buildRows(
+            props.data,
+            navigate,
+            props.url,
+            props.toggleHandler,
+            props.deleteHandler,
+          )}
+          <IndexTable.Row id={"asd"} key={"asd"} position={69}>
+            <IndexTable.Cell>{"test"}</IndexTable.Cell>
+            <IndexTable.Cell>{"test"}</IndexTable.Cell>
+            <IndexTable.Cell>{"test"}</IndexTable.Cell>
+            <IndexTable.Cell>
+              <Checkbox
+                label=""
+                checked={testState}
+                onChange={() => {
+                  setTestState(!testState);
+                  console.log(testState);
+                  // toggleHandler();
+                }}
+              />
+            </IndexTable.Cell>
+            <IndexTable.Cell>
+              <Button icon={XIcon} onClick={() => console.log("hi")} />
+            </IndexTable.Cell>
+          </IndexTable.Row>
         </IndexTable>
       </BlockStack>
     </Card>
