@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://rolled-disputes-else-holland.trycloudflare.com"
+application_url = "https://aol-bw-pill-forwarding.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://rolled-disputes-else-holland.trycloudflare.com/auth/callback",
-  "https://rolled-disputes-else-holland.trycloudflare.com/auth/shopify/callback",
-  "https://rolled-disputes-else-holland.trycloudflare.com/api/auth/callback"
+  "https://aol-bw-pill-forwarding.trycloudflare.com/auth/callback",
+  "https://aol-bw-pill-forwarding.trycloudflare.com/auth/shopify/callback",
+  "https://aol-bw-pill-forwarding.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

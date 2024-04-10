@@ -18,9 +18,7 @@ import { authenticate } from "~/shopify.server";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
 
-  console.log("test");
   const minimumDate = (await request.formData()).get("minimumDate");
-  console.log(minimumDate);
 
   if (!minimumDate) {
     return "";
@@ -31,14 +29,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     query: minimumDate.toString(),
     nextCursorParam: null,
   });
-  console.log(response);
   let responseJson = await response.json();
-  console.log(responseJson);
-  console.log(responseJson.data.metafieldDefinitions.pageInfo.hasNextPage);
-  console.log(responseJson.data.metafieldDefinitions.edges);
 
-  let metafieldDefinitions: any[] = [];
-  metafieldDefinitions = metafieldDefinitions.concat(
+  let metafieldDefinitionsGraphQL: any[] = [];
+  metafieldDefinitionsGraphQL = metafieldDefinitionsGraphQL.concat(
     responseJson.data.metafieldDefinitions.edges,
   );
   while (responseJson.data.metafieldDefinitions.pageInfo.hasNextPage) {
@@ -49,19 +43,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         responseJson.data.metafieldDefinitions.pageInfo.endCursor,
     });
     responseJson = await response.json();
-    metafieldDefinitions = metafieldDefinitions.concat(
+    metafieldDefinitionsGraphQL = metafieldDefinitionsGraphQL.concat(
       responseJson.data.metafieldDefinitions.edges,
     );
   }
 
-  console.log(metafieldDefinitions.length);
-
-  metafieldDefinitions.forEach((definition: any) => {
-    console.log(definition.node);
-  });
-
-  const databaseReadyDefinitions: MetafieldDefinition[] =
-    metafieldDefinitions.map((edge: any) => {
+  const metafieldDefinitions: MetafieldDefinition[] =
+    metafieldDefinitionsGraphQL.map((edge: any) => {
       return {
         id: edge.node.id,
         name: edge.node.name,
@@ -70,7 +58,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       };
     });
 
-  console.log(databaseReadyDefinitions);
+  const databaseReadyDefinitions: MetafieldDefinition[] = (
+    await Promise.all(
+      metafieldDefinitions.map(async (definition) => {
+        const foundDefinition = await prisma.metafieldDefinition.findUnique({
+          where: {
+            id: definition.id,
+          },
+        });
+        if (foundDefinition) {
+          return null;
+        }
+        return definition;
+      }),
+    )
+  ).filter((def): def is MetafieldDefinition => (def ? true : false));
+
   databaseReadyDefinitions.forEach(async (definition: MetafieldDefinition) => {
     const res = await prisma.metafieldDefinition.create({
       data: {
@@ -79,7 +82,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   });
 
-  return "blahblah";
+  return "success";
 };
 
 export default function SyncMetafieldsPage() {
