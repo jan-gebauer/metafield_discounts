@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://se-hotels-rank-farms.trycloudflare.com"
+application_url = "https://rolled-disputes-else-holland.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://se-hotels-rank-farms.trycloudflare.com/auth/callback",
-  "https://se-hotels-rank-farms.trycloudflare.com/auth/shopify/callback",
-  "https://se-hotels-rank-farms.trycloudflare.com/api/auth/callback"
+  "https://rolled-disputes-else-holland.trycloudflare.com/auth/callback",
+  "https://rolled-disputes-else-holland.trycloudflare.com/auth/shopify/callback",
+  "https://rolled-disputes-else-holland.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
