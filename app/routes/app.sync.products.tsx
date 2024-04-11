@@ -155,7 +155,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
           ),
         );
-        console.log(metafields);
         return {
           item: item,
           metafields: metafields,
@@ -163,13 +162,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }),
     );
 
-  console.log("processed items");
-  console.log(processedItems);
-  // const itemsWithMetafields = processedItems.filter(
-  //   (processedItem: { item: Item; metafields: Metafield[] }) => {
-  //     return processedItem.metafields.length > 0;
-  //   },
-  // );
   const processedItemsWithMetafields = processedItems.filter(
     (processedItem: { item: Item; metafields: MetafieldItemless[] }) => {
       return processedItem.metafields.length > 0;
@@ -177,8 +169,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
   processedItemsWithMetafields.forEach(
     async (processedItem: { item: Item; metafields: MetafieldItemless[] }) => {
-      console.log(processedItem.item);
-      console.log(processedItem.metafields);
       const res = await prisma.item.create({
         data: {
           id: processedItem.item.id,
@@ -192,7 +182,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           Metafield: true,
         },
       });
-      console.log(res);
     },
   );
 

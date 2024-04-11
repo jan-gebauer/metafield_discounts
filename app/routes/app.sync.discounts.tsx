@@ -18,9 +18,7 @@ import { authenticate } from "~/shopify.server";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
 
-  console.log("test");
   const minimumDate = (await request.formData()).get("minimumDate");
-  console.log(minimumDate);
 
   if (!minimumDate) {
     return "";
@@ -31,17 +29,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     query: minimumDate.toString(),
     nextCursorParam: null,
   });
-  console.log(response);
   let responseJson = await response.json();
-  console.log(responseJson.data);
-  console.log(responseJson.data.automaticDiscountNodes.edges);
 
-  // here is what will happen
-  // make the initial call
-  // have a loop
-  // save the data to an array
-  // keep checking for next page
-  // if there is one, call the thing again
   let items: any[] = [];
   items = items.concat(responseJson.data.automaticDiscountNodes.edges);
   while (responseJson.data.automaticDiscountNodes.pageInfo.hasNextPage) {
@@ -55,21 +44,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     items = items.concat(responseJson.data.automaticDiscountNodes.edges);
   }
 
-  // console.log(items.length);
-
-  items.forEach((item: any) => {
-    console.log(item.node);
-    console.log(item.node.automaticDiscount);
-    console.log(item.node.automaticDiscount !== undefined);
-    console.log(Object.keys(item.node.automaticDiscount).length > 0);
-  });
-
   const automaticDiscounts = items.filter(
     (item: any) => Object.keys(item.node.automaticDiscount).length > 0,
   );
 
-  console.log(automaticDiscounts);
-  // persist the data in the database
   const databaseReadyDiscounts: Discount[] = automaticDiscounts.map(
     (edge: any) => {
       return {
@@ -80,9 +58,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     },
   );
 
-  console.log(databaseReadyDiscounts);
   databaseReadyDiscounts.forEach(async (discount: Discount) => {
-    // try for unique constraint
     const found = await prisma.discount.findUnique({
       where: {
         id: discount.id,
@@ -96,7 +72,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           summary: discount.summary,
         },
       });
-      console.log("result");
       console.log(res);
     } else {
       console.log(found);
