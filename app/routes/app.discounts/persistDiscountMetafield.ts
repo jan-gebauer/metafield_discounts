@@ -18,23 +18,32 @@ export const persistDiscountMetafield = async ({
     });
   }
 
+  const metafieldValueEntity = await prisma.metafieldValue.findUnique({
+    where: {
+      value: metafieldValue.toString(),
+    },
+  });
+
+  if (!metafieldValueEntity || !metafieldValueEntity.value) {
+    return json({
+      error: "Missing data - metafieldValue is not in the db",
+      metafieldDefinitionId: metafieldDefinition,
+      metafieldValue,
+      discount,
+    });
+  }
+
+  console.log(metafieldValueEntity?.value);
+  console.log(metafieldDefinition, metafieldValue, discount);
+
   const persisted = await prisma.discountMetafieldUnion.create({
     data: {
       active: false,
       discount_id: discount.toString(),
-      metafield_id: metafieldValue.toString(),
+      metafieldDefinitionId: metafieldDefinition.toString(),
+      metafield_value_id: metafieldValueEntity.value,
     },
   });
 
-  const result = await prisma.metafield.updateMany({
-    where: {
-      metafieldDefinitionId: metafieldDefinition.valueOf(),
-      value: metafieldValue.valueOf(),
-    },
-    data: {
-      discount_id: discount.valueOf(),
-    },
-  });
-
-  return json({ numChangedEntries: result.count });
+  return json({ union: persisted });
 };

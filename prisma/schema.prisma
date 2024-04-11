@@ -48,7 +48,6 @@ model Metafield {
   metafield_value_id       String
   type                     String
   description              String
-  DiscountMetafieldUnion   DiscountMetafieldUnion[]
   MetafieldDefinitionValue MetafieldDefinitionValue[]
 }
 
@@ -82,8 +81,6 @@ model DiscountMetafieldUnion {
   metafield_value       MetafieldValue      @relation(fields: [metafield_value_id], references: [value])
   metafield_value_id    String
   active                Boolean
-  Metafield             Metafield?          @relation(fields: [metafieldId], references: [id])
-  metafieldId           String?
 
   @@id([discount_id, metafieldDefinitionId, metafield_value_id])
 }
