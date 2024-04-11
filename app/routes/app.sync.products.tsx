@@ -26,6 +26,14 @@ export type MetafieldQL = {
   };
 };
 
+export type MetafieldItemless = {
+  id: string;
+  metafieldDefinitionId: string;
+  metafield_value_id: string;
+  type: string;
+  description: string;
+};
+
 async function getMetafieldAndDefinition(metafield: any): Promise<{
   metafield: MetafieldQL | null;
   metafieldDefinition: MetafieldDefinition | null;
@@ -77,7 +85,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const itemsWithMetafields = items.filter(
     (item: any) => item.node.metafields.edges.length > 0,
   );
-  const processedItems: { item: Item; metafields: Metafield[] }[] =
+  const processedItems: { item: Item; metafields: MetafieldItemless[] }[] =
     await Promise.all(
       itemsWithMetafields.map(async (edge: any) => {
         const item: Item = {
@@ -115,12 +123,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
         );
 
-        const metafields: Metafield[] = await Promise.all(
+        const metafields: MetafieldItemless[] = await Promise.all(
           filteredMetafields.map(
             async (metafieldAndDefinition: {
               metafield: MetafieldQL;
               metafieldDefinition: MetafieldDefinition;
-            }): Promise<any> => {
+            }): Promise<MetafieldItemless> => {
               let metafieldValue = await prisma.metafieldValue.findUnique({
                 where: {
                   value: metafieldAndDefinition.metafield.node.value,
@@ -163,12 +171,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   //   },
   // );
   const processedItemsWithMetafields = processedItems.filter(
-    (processedItem: { item: Item; metafields: Metafield[] }) => {
+    (processedItem: { item: Item; metafields: MetafieldItemless[] }) => {
       return processedItem.metafields.length > 0;
     },
   );
   processedItemsWithMetafields.forEach(
-    async (processedItem: { item: Item; metafields: Metafield[] }) => {
+    async (processedItem: { item: Item; metafields: MetafieldItemless[] }) => {
       console.log(processedItem.item);
       console.log(processedItem.metafields);
       const res = await prisma.item.create({
@@ -177,7 +185,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           title: processedItem.item.title,
           handle: processedItem.item.handle,
           Metafield: {
-            create: processedItem.metafields,
+            create: [...processedItem.metafields],
           },
         },
         include: {
