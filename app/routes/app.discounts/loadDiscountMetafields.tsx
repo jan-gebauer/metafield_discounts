@@ -5,32 +5,34 @@ export const loadDiscountMetafields = async (): Promise<
   DiscountMetafields[]
 > => {
   const metafields = await prisma.metafield.findMany();
+  const discountMetafieldUnions =
+    await prisma.discountMetafieldUnion.findMany();
 
-  const displayableDiscountMetafields = await Promise.all(
-    metafields.map(async (metafield) => {
-      if (metafield.discount_id) {
+  const displayableDiscountMetafieldUnions = await Promise.all(
+    discountMetafieldUnions.map(async (union) => {
+      if (union.discount_id) {
         const discount: Discount | null = await prisma.discount.findUnique({
           where: {
-            id: metafield.discount_id,
+            id: union.discount_id,
           },
         });
         const metafieldDefinition = await prisma.metafieldDefinition.findUnique(
           {
             where: {
-              id: metafield.metafieldDefinitionId,
+              id: union.metafieldDefinitionId,
             },
           },
         );
         return {
           discount: discount?.title ?? null,
           metafieldNamespaceKey: `${metafieldDefinition?.namespace ?? null}.${metafieldDefinition?.key ?? null}`,
-          value: metafield.value,
+          value: union.metafield_value_id,
         };
       }
     }),
   );
 
-  const nonEmptyDisplayables = displayableDiscountMetafields.filter(
+  const nonEmptyDisplayables = displayableDiscountMetafieldUnions.filter(
     (displayable) => {
       if (
         !displayable ||

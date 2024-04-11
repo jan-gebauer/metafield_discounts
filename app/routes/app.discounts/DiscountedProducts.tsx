@@ -17,6 +17,7 @@ const buildRows = (
   toggleHandler: () => void,
   deleteHandler: () => void,
 ) => {
+  console.log(data);
   const rows = data.map((discountMetafield, index) => {
     return (
       <IndexTable.Row
