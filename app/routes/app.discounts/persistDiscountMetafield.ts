@@ -41,7 +41,7 @@ export const persistDiscountMetafield = async ({
       active: false,
       discount_id: discount.toString(),
       metafieldDefinitionId: metafieldDefinition.toString(),
-      metafield_value_id: metafieldValueEntity.value,
+      metafield_value_id: metafieldValueEntity.id,
     },
   });
 

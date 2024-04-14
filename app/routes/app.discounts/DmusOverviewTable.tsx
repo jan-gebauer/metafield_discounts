@@ -53,7 +53,7 @@ const buildRows = (
   return rows;
 };
 
-export default function DiscountedProducts(props: {
+export default function DmusOverviewTable(props: {
   url: string;
   data: DiscountMetafields[];
   toggleHandler: () => void;

@@ -69,7 +69,7 @@ model DiscountMetafieldUnion {
   discount_id           String
   metafieldDefinition   MetafieldDefinition @relation(fields: [metafieldDefinitionId], references: [id])
   metafieldDefinitionId String              @map("metafield_definition_id")
-  metafield_value       MetafieldValue      @relation(fields: [metafield_value_id], references: [value])
+  metafield_value       MetafieldValue      @relation(fields: [metafield_value_id], references: [id])
   metafield_value_id    String
   active                Boolean
 

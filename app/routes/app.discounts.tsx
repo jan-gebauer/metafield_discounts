@@ -14,7 +14,7 @@ import {
   Checkbox,
 } from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
-import DiscountedProducts from "./app.discounts/DiscountedProducts";
+import DmusOverviewTable from "./app.discounts/DmusOverviewTable";
 import { loadDiscountMetafields } from "./app.discounts/loadDiscountMetafields";
 
 export type DiscountMetafields = {
@@ -78,9 +78,9 @@ export default function ProductsPage() {
                                 -> refresh might not even be necessary as the overview allegedly might revalidate on the action submission
                             */}
               <Outlet />
-              <DiscountedProducts
+              <DmusOverviewTable
                 data={discountMetafields}
-                url={"/app/discountmetafield"}
+                url={"/app/dmu"}
                 toggleHandler={() => console.log("toggle")}
                 deleteHandler={() => console.log("delete")}
               />
