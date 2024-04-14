@@ -1,4 +1,5 @@
 import { Item, Metafield, MetafieldDefinition } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { useSubmit } from "@remix-run/react";
 import {
@@ -32,6 +33,11 @@ export type MetafieldItemless = {
   metafield_value_id: string;
   type: string;
   description: string;
+};
+
+export type MetafieldAndDefinition = {
+  metafield: MetafieldQL;
+  metafieldDefinition: MetafieldDefinition;
 };
 
 async function getMetafieldAndDefinition(metafield: any): Promise<{
@@ -115,10 +121,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           (metafieldAndDefinition: {
             metafield: MetafieldQL | null;
             metafieldDefinition: MetafieldDefinition | null;
-          }): metafieldAndDefinition is {
-            metafield: MetafieldQL;
-            metafieldDefinition: MetafieldDefinition;
-          } => {
+          }): metafieldAndDefinition is MetafieldAndDefinition => {
             return metafieldAndDefinition.metafield !== null;
           },
         );
@@ -136,18 +139,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               });
 
               if (!metafieldValue) {
-                metafieldValue = await prisma.metafieldValue.create({
-                  data: {
-                    value: metafieldAndDefinition.metafield.node.value,
-                  },
-                });
+                try {
+                  metafieldValue = await prisma.metafieldValue.create({
+                    data: {
+                      value: metafieldAndDefinition.metafield.node.value,
+                    },
+                  });
+                } catch (error: any) {
+                  if (error.code === "P2002") {
+                    metafieldValue = await prisma.metafieldValue.findFirst({
+                      where: {
+                        value: metafieldAndDefinition.metafield.node.value,
+                      },
+                    });
+                  } else {
+                    throw error;
+                  }
+                }
               }
 
               return {
                 id: metafieldAndDefinition.metafield.node.id,
                 metafieldDefinitionId:
                   metafieldAndDefinition.metafieldDefinition.id,
-                metafield_value_id: metafieldValue.value,
+                metafield_value_id: metafieldValue!.id,
                 type: metafieldAndDefinition.metafield.node.type,
                 description:
                   metafieldAndDefinition.metafield.node.description || "",
@@ -169,19 +184,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
   processedItemsWithMetafields.forEach(
     async (processedItem: { item: Item; metafields: MetafieldItemless[] }) => {
-      const res = await prisma.item.create({
-        data: {
-          id: processedItem.item.id,
-          title: processedItem.item.title,
-          handle: processedItem.item.handle,
-          Metafield: {
-            create: [...processedItem.metafields],
+      try {
+        const res = await prisma.item.create({
+          data: {
+            ...processedItem.item,
+            Metafield: {
+              create: [...processedItem.metafields],
+            },
           },
-        },
-        include: {
-          Metafield: true,
-        },
-      });
+          include: {
+            Metafield: true,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
   );
 

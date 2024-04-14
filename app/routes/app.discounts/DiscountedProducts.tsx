@@ -19,14 +19,13 @@ const buildRows = (
 ) => {
   console.log(data);
   const rows = data.map((discountMetafield, index) => {
+    console.log(discountMetafield);
     return (
       <IndexTable.Row
         id={discountMetafield.discount}
         key={discountMetafield.discount}
         position={index}
-        onClick={() =>
-          navigate(`${url}/${discountMetafield.discountMetafieldUnionId}`)
-        }
+        onClick={() => navigate(`${url}/${discountMetafield.dmuId}`)}
       >
         <IndexTable.Cell>{discountMetafield.discount}</IndexTable.Cell>
         <IndexTable.Cell>

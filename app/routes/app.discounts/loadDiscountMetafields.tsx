@@ -4,7 +4,7 @@ import { DiscountMetafields } from "../app.discounts";
 export const loadDiscountMetafields = async (): Promise<
   DiscountMetafields[]
 > => {
-  const metafields = await prisma.metafield.findMany();
+  // const metafields = await prisma.metafield.findMany();
   const discountMetafieldUnions =
     await prisma.discountMetafieldUnion.findMany();
 
@@ -24,6 +24,7 @@ export const loadDiscountMetafields = async (): Promise<
           },
         );
         return {
+          dmuId: union.id,
           discount: discount?.title ?? null,
           metafieldNamespaceKey: `${metafieldDefinition?.namespace ?? null}.${metafieldDefinition?.key ?? null}`,
           value: union.metafield_value_id,

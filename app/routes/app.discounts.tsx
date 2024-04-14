@@ -18,7 +18,7 @@ import DiscountedProducts from "./app.discounts/DiscountedProducts";
 import { loadDiscountMetafields } from "./app.discounts/loadDiscountMetafields";
 
 export type DiscountMetafields = {
-  discountMetafieldUnionId: string;
+  dmuId: string;
   discount: string;
   metafieldNamespaceKey: string;
   value: string;
@@ -80,7 +80,7 @@ export default function ProductsPage() {
               <Outlet />
               <DiscountedProducts
                 data={discountMetafields}
-                url={"/app/discounts"}
+                url={"/app/discountmetafield"}
                 toggleHandler={() => console.log("toggle")}
                 deleteHandler={() => console.log("delete")}
               />

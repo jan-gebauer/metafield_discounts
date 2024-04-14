@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://belle-shield-rico-templates.trycloudflare.com"
+application_url = "https://webshots-screw-electronics-babes.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://belle-shield-rico-templates.trycloudflare.com/auth/callback",
-  "https://belle-shield-rico-templates.trycloudflare.com/auth/shopify/callback",
-  "https://belle-shield-rico-templates.trycloudflare.com/api/auth/callback"
+  "https://webshots-screw-electronics-babes.trycloudflare.com/auth/callback",
+  "https://webshots-screw-electronics-babes.trycloudflare.com/auth/shopify/callback",
+  "https://webshots-screw-electronics-babes.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

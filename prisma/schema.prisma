@@ -29,26 +29,24 @@ model Item {
 }
 
 model MetafieldDefinition {
-  id                       String                     @id
-  name                     String
-  namespace                String
-  key                      String
-  Metafield                Metafield[]
-  MetafieldDefinitionValue MetafieldDefinitionValue[]
-  DiscountMetafieldUnion   DiscountMetafieldUnion[]
+  id                     String                   @id @default(uuid())
+  name                   String
+  namespace              String
+  key                    String
+  Metafield              Metafield[]
+  DiscountMetafieldUnion DiscountMetafieldUnion[]
 }
 
 model Metafield {
-  id                       String                     @id
-  item                     Item                       @relation(fields: [item_id], references: [id])
-  item_id                  String
-  metafieldDefinition      MetafieldDefinition        @relation(fields: [metafieldDefinitionId], references: [id])
-  metafieldDefinitionId    String                     @map("metafield_definition_id")
-  metafield_value          MetafieldValue             @relation(fields: [metafield_value_id], references: [value])
-  metafield_value_id       String
-  type                     String
-  description              String
-  MetafieldDefinitionValue MetafieldDefinitionValue[]
+  id                    String              @id
+  item                  Item                @relation(fields: [item_id], references: [id])
+  item_id               String
+  metafieldDefinition   MetafieldDefinition @relation(fields: [metafieldDefinitionId], references: [id])
+  metafieldDefinitionId String              @map("metafield_definition_id")
+  metafield_value       MetafieldValue      @relation(fields: [metafield_value_id], references: [id])
+  metafield_value_id    String
+  type                  String
+  description           String
 }
 
 model Discount {
@@ -59,21 +57,14 @@ model Discount {
 }
 
 model MetafieldValue {
-  value                  String @id
+  id                     String                   @id @default(uuid())
+  value                  String                   @unique
   Metafield              Metafield[]
   DiscountMetafieldUnion DiscountMetafieldUnion[]
 }
 
-model MetafieldDefinitionValue {
-  metafieldDefinition   MetafieldDefinition @relation(fields: [metafieldDefinitionId], references: [id])
-  metafieldDefinitionId String              @map("metafield_definition_id")
-  metafield             Metafield           @relation(fields: [metafield_id], references: [id])
-  metafield_id          String
-
-  @@id([metafieldDefinitionId, metafield_id])
-}
-
 model DiscountMetafieldUnion {
+  id                    String              @id @default(uuid())
   discount              Discount            @relation(fields: [discount_id], references: [id])
   discount_id           String
   metafieldDefinition   MetafieldDefinition @relation(fields: [metafieldDefinitionId], references: [id])
@@ -82,5 +73,5 @@ model DiscountMetafieldUnion {
   metafield_value_id    String
   active                Boolean
 
-  @@id([discount_id, metafieldDefinitionId, metafield_value_id])
+  @@unique([discount_id, metafieldDefinitionId, metafield_value_id])
 }
