@@ -1,6 +1,11 @@
-import { Discount, MetafieldDefinition, MetafieldValue } from "@prisma/client";
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import {
+  Discount,
+  DiscountMetafieldUnion,
+  MetafieldDefinition,
+  MetafieldValue,
+} from "@prisma/client";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 import { BlockStack, Button, Card, Layout, Page } from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 
@@ -36,14 +41,22 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     },
   });
 
-  return { discount, metafieldDefinition, metafieldValue };
+  return { dmu, discount, metafieldDefinition, metafieldValue };
 }
 
-// I would like to be able to delete it
-// I would like to be able to toggle it
+export const action = async ({ request }: ActionFunctionArgs) => {
+  if (request.method == "DELETE") {
+    console.log("deleting");
+  }
+  if (request.method == "POST") {
+    console.log("toggling");
+  }
+  return json({});
+};
 
 export default function DiscountMetafield() {
   const dmu: {
+    dmu: DiscountMetafieldUnion;
     discount: Discount;
     metafieldDefinition: MetafieldDefinition;
     metafieldValue: MetafieldValue;
@@ -64,8 +77,12 @@ export default function DiscountMetafield() {
               {dmu.metafieldDefinition.key}
               <br />
               Metafield value: {dmu.metafieldValue.value}
-              <Button>Toggle</Button>
-              <Button>Delete</Button>
+              <Form method="POST">
+                <Button submit>{dmu.dmu.active ? "Disable" : "Enable"}</Button>
+              </Form>
+              <Form method="DELETE">
+                <Button submit>Delete</Button>
+              </Form>
             </BlockStack>
           </Card>
         </Layout.Section>
