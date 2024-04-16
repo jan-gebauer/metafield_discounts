@@ -2,7 +2,7 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://wilson-phases-put-fashion.trycloudflare.com"
+application_url = "https://wondering-styles-cups-posts.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://wilson-phases-put-fashion.trycloudflare.com/auth/callback",
-  "https://wilson-phases-put-fashion.trycloudflare.com/auth/shopify/callback",
-  "https://wilson-phases-put-fashion.trycloudflare.com/api/auth/callback"
+  "https://wondering-styles-cups-posts.trycloudflare.com/auth/callback",
+  "https://wondering-styles-cups-posts.trycloudflare.com/auth/shopify/callback",
+  "https://wondering-styles-cups-posts.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

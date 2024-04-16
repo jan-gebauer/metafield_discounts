@@ -5,7 +5,7 @@ import {
   MetafieldValue,
 } from "@prisma/client";
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useSubmit } from "@remix-run/react";
 import { BlockStack, Button, Card, Layout, Page } from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 
@@ -45,11 +45,16 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  console.log("wowowowoow");
+  console.log(await request.formData());
   if (request.method == "DELETE") {
     console.log("deleting");
   }
   if (request.method == "POST") {
     console.log("toggling");
+    // await prisma.discountMetafieldUnion.update({data: {
+    //   id: dmu
+    // }})
   }
   return json({});
 };
@@ -62,7 +67,8 @@ export default function DiscountMetafield() {
     metafieldValue: MetafieldValue;
   } = useLoaderData();
 
-  console.log(dmu);
+  const submit = useSubmit();
+  // console.log(dmu);
 
   return (
     <Page>
@@ -77,10 +83,12 @@ export default function DiscountMetafield() {
               {dmu.metafieldDefinition.key}
               <br />
               Metafield value: {dmu.metafieldValue.value}
-              <Form method="POST">
+              <br />
+              {dmu.dmu.active ? "Active" : "Inactive"}
+              <Form onSubmit={(e) => submit(dmu, { method: "POST" })}>
                 <Button submit>{dmu.dmu.active ? "Disable" : "Enable"}</Button>
               </Form>
-              <Form method="DELETE">
+              <Form onSubmit={(e) => submit(dmu, { method: "DELETE" })}>
                 <Button submit>Delete</Button>
               </Form>
             </BlockStack>
