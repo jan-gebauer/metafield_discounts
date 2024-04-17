@@ -4,8 +4,13 @@ import {
   MetafieldDefinition,
   MetafieldValue,
 } from "@prisma/client";
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
-import { Form, useLoaderData, useSubmit } from "@remix-run/react";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  redirect,
+} from "@remix-run/node";
+import { useLoaderData, useSubmit } from "@remix-run/react";
 import { BlockStack, Button, Card, Layout, Page } from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 
@@ -45,16 +50,33 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  console.log("wowowowoow");
-  console.log(await request.formData());
+  const formData = await request.formData();
+  const formDmu = formData.get("dmu");
+  const dmu = JSON.parse(formDmu?.toString()!) as {
+    dmu: DiscountMetafieldUnion;
+    discount: Discount;
+    metafieldDefinition: MetafieldDefinition;
+    metafieldValue: MetafieldValue;
+  };
   if (request.method == "DELETE") {
     console.log("deleting");
+    await prisma.discountMetafieldUnion.delete({
+      where: {
+        id: dmu.dmu.id,
+      },
+    });
+    return redirect("/app/discounts");
   }
   if (request.method == "POST") {
     console.log("toggling");
-    // await prisma.discountMetafieldUnion.update({data: {
-    //   id: dmu
-    // }})
+    await prisma.discountMetafieldUnion.update({
+      data: {
+        active: !dmu.dmu.active,
+      },
+      where: {
+        id: dmu.dmu.id,
+      },
+    });
   }
   return json({});
 };
@@ -68,7 +90,9 @@ export default function DiscountMetafield() {
   } = useLoaderData();
 
   const submit = useSubmit();
-  // console.log(dmu);
+
+  const formData = new FormData();
+  formData.append("dmu", JSON.stringify(dmu));
 
   return (
     <Page>
@@ -85,12 +109,20 @@ export default function DiscountMetafield() {
               Metafield value: {dmu.metafieldValue.value}
               <br />
               {dmu.dmu.active ? "Active" : "Inactive"}
-              <Form onSubmit={(e) => submit(dmu, { method: "POST" })}>
-                <Button submit>{dmu.dmu.active ? "Disable" : "Enable"}</Button>
-              </Form>
-              <Form onSubmit={(e) => submit(dmu, { method: "DELETE" })}>
-                <Button submit>Delete</Button>
-              </Form>
+              <Button
+                onClick={() => {
+                  submit(formData, { method: "POST" });
+                }}
+              >
+                {dmu.dmu.active ? "Disable" : "Enable"}
+              </Button>
+              <Button
+                onClick={() => {
+                  submit(formData, { method: "DELETE" });
+                }}
+              >
+                Delete
+              </Button>
             </BlockStack>
           </Card>
         </Layout.Section>

@@ -2,7 +2,8 @@
 
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
-application_url = "https://since-kenneth-portion-reservations.trycloudflare.com"
+handle = "discountery"
+application_url = "https://contests-spell-telephony-div.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://since-kenneth-portion-reservations.trycloudflare.com/auth/callback",
-  "https://since-kenneth-portion-reservations.trycloudflare.com/auth/shopify/callback",
-  "https://since-kenneth-portion-reservations.trycloudflare.com/api/auth/callback"
+  "https://contests-spell-telephony-div.trycloudflare.com/auth/callback",
+  "https://contests-spell-telephony-div.trycloudflare.com/auth/shopify/callback",
+  "https://contests-spell-telephony-div.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
