@@ -12,7 +12,15 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, useSubmit } from "@remix-run/react";
 import { BlockStack, Button, Card, Layout, Page } from "@shopify/polaris";
+import { toggleDmu } from "graphql/dmuQueries";
 import { authenticate } from "~/shopify.server";
+
+export type DmuPackage = {
+  dmu: DiscountMetafieldUnion;
+  discount: Discount;
+  metafieldDefinition: MetafieldDefinition;
+  metafieldValue: MetafieldValue;
+};
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   await authenticate.admin(request);
@@ -50,14 +58,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const { admin } = await authenticate.admin(request);
   const formData = await request.formData();
   const formDmu = formData.get("dmu");
-  const dmu = JSON.parse(formDmu?.toString()!) as {
-    dmu: DiscountMetafieldUnion;
-    discount: Discount;
-    metafieldDefinition: MetafieldDefinition;
-    metafieldValue: MetafieldValue;
-  };
+  const dmu = JSON.parse(formDmu?.toString()!) as DmuPackage;
   if (request.method == "DELETE") {
     console.log("deleting");
     await prisma.discountMetafieldUnion.delete({
@@ -69,6 +73,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
   if (request.method == "POST") {
     console.log("toggling");
+    console.log(dmu.discount.title);
+    const products = await prisma.item.findMany({
+      where: {
+        Metafield: {
+          every: {
+            metafieldDefinitionId: dmu.metafieldDefinition.id,
+            metafield_value_id: dmu.metafieldValue.id,
+          },
+        },
+      },
+    });
+    const productsToAdd = dmu.dmu.active
+      ? []
+      : products.map((product) => product.id);
+    const productsToRemove = dmu.dmu.active
+      ? products.map((product) => product.id)
+      : [];
+    console.log(productsToAdd);
+    console.log(productsToRemove);
+    const result = await toggleDmu(
+      admin,
+      dmu.discount.id,
+      productsToAdd,
+      productsToRemove,
+    );
+    const respJson = await result.json();
+    console.log(respJson.data);
     await prisma.discountMetafieldUnion.update({
       data: {
         active: !dmu.dmu.active,
@@ -82,12 +113,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function DiscountMetafield() {
-  const dmu: {
-    dmu: DiscountMetafieldUnion;
-    discount: Discount;
-    metafieldDefinition: MetafieldDefinition;
-    metafieldValue: MetafieldValue;
-  } = useLoaderData();
+  const dmu: DmuPackage = useLoaderData();
 
   const submit = useSubmit();
 

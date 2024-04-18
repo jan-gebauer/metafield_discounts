@@ -3,7 +3,7 @@
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
 handle = "discountery"
-application_url = "https://contests-spell-telephony-div.trycloudflare.com"
+application_url = "https://cet-concerns-ridge-mario.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://contests-spell-telephony-div.trycloudflare.com/auth/callback",
-  "https://contests-spell-telephony-div.trycloudflare.com/auth/shopify/callback",
-  "https://contests-spell-telephony-div.trycloudflare.com/api/auth/callback"
+  "https://cet-concerns-ridge-mario.trycloudflare.com/auth/callback",
+  "https://cet-concerns-ridge-mario.trycloudflare.com/auth/shopify/callback",
+  "https://cet-concerns-ridge-mario.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
