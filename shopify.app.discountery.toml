@@ -3,7 +3,7 @@
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
 handle = "discountery"
-application_url = "https://cet-concerns-ridge-mario.trycloudflare.com"
+application_url = "https://uruguay-terminal-review-mary.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://cet-concerns-ridge-mario.trycloudflare.com/auth/callback",
-  "https://cet-concerns-ridge-mario.trycloudflare.com/auth/shopify/callback",
-  "https://cet-concerns-ridge-mario.trycloudflare.com/api/auth/callback"
+  "https://uruguay-terminal-review-mary.trycloudflare.com/auth/callback",
+  "https://uruguay-terminal-review-mary.trycloudflare.com/auth/shopify/callback",
+  "https://uruguay-terminal-review-mary.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -1,3 +1,6 @@
+import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
+import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
+
 export const createDiscount = async ({ admin }: { admin: any }) => {
   return await admin.graphql(
     `#graphql
@@ -98,7 +101,7 @@ export const getDiscountsUpdatedAfterWithItems = async ({
   nextCursorParam,
   query,
 }: {
-  admin: any;
+  admin: AdminApiContext<RestResources>;
   nextCursorParam: string | null;
   query: string;
 }) => {

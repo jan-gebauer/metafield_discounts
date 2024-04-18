@@ -12,6 +12,7 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, useSubmit } from "@remix-run/react";
 import { BlockStack, Button, Card, Layout, Page } from "@shopify/polaris";
+import { getDiscountsUpdatedAfterWithItems } from "graphql/discountQueries";
 import { toggleDmu } from "graphql/dmuQueries";
 import { authenticate } from "~/shopify.server";
 
@@ -62,6 +63,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const formDmu = formData.get("dmu");
   const dmu = JSON.parse(formDmu?.toString()!) as DmuPackage;
+
+  const resp = await getDiscountsUpdatedAfterWithItems({
+    admin: admin,
+    nextCursorParam: null,
+    query: "",
+  });
+  const respJsonDiscount = await resp.json();
+
+  respJsonDiscount.data.automaticDiscountNodes.edges.forEach((edge: any) => {
+    console.log(edge.node.automaticDiscount);
+    if (edge.node.automaticDiscount) {
+      console.log(edge.node.automaticDiscount.customerGets);
+    }
+  });
   if (request.method == "DELETE") {
     console.log("deleting");
     await prisma.discountMetafieldUnion.delete({
