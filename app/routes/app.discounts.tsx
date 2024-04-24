@@ -15,7 +15,7 @@ import {
 } from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import DmusOverviewTable from "./app.discounts/DmusOverviewTable";
-import { loadDiscountMetafields } from "./app.discounts/loadDiscountMetafields";
+import { loadDmus } from "./app.discounts/loadDiscountMetafields";
 
 export type DiscountMetafields = {
   dmuId: string;
@@ -30,7 +30,7 @@ export const loader = async ({
 }: LoaderFunctionArgs): Promise<DiscountMetafields[]> => {
   await authenticate.admin(request);
 
-  return await loadDiscountMetafields();
+  return await loadDmus();
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

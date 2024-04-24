@@ -1,55 +1,15 @@
-import { Discount } from "@prisma/client";
 import { DiscountMetafields } from "../app.discounts";
 
-export const loadDiscountMetafields = async (): Promise<
-  DiscountMetafields[]
-> => {
-  // const metafields = await prisma.metafield.findMany();
-  const discountMetafieldUnions =
-    await prisma.discountMetafieldUnion.findMany();
+export const loadDmus = async (): Promise<DiscountMetafields[]> => {
+  const dmus = await prisma.dmu.findMany();
 
-  const displayableDiscountMetafieldUnions = await Promise.all(
-    discountMetafieldUnions.map(async (union) => {
-      if (union.discount_id) {
-        const discount: Discount | null = await prisma.discount.findUnique({
-          where: {
-            id: union.discount_id,
-          },
-        });
-        const metafieldDefinition = await prisma.metafieldDefinition.findUnique(
-          {
-            where: {
-              id: union.metafieldDefinitionId,
-            },
-          },
-        );
-        return {
-          dmuId: union.id,
-          discount: discount?.title ?? null,
-          metafieldNamespaceKey: `${metafieldDefinition?.namespace ?? null}.${metafieldDefinition?.key ?? null}`,
-          value: union.metafield_value_id,
-        };
-      }
-    }),
-  );
-
-  const nonEmptyDisplayables = displayableDiscountMetafieldUnions.filter(
-    (displayable) => {
-      if (
-        !displayable ||
-        !displayable.discount ||
-        !displayable.metafieldNamespaceKey
-      ) {
-        return false;
-      }
-      return true;
-    },
-  );
-  const stringedDisplayables = nonEmptyDisplayables.map((displayable) => {
-    return JSON.stringify(displayable);
+  return dmus.map((dmu) => {
+    return {
+      dmuId: dmu.id,
+      discount: dmu.discount_id,
+      metafieldNamespaceKey: `${dmu.metafield_definition_id}.${dmu.metafield_definition_id}`,
+      value: dmu.metafield_value,
+      active: dmu.active,
+    };
   });
-  const stringedDiscountMetafieldSet = new Set([...stringedDisplayables]);
-  return Array.from(stringedDiscountMetafieldSet).map((displayable) =>
-    JSON.parse(displayable),
-  );
 };
