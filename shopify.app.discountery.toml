@@ -3,7 +3,7 @@
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
 handle = "discountery"
-application_url = "https://inc-authors-usa-movie.trycloudflare.com"
+application_url = "https://should-mozambique-dot-certainly.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://inc-authors-usa-movie.trycloudflare.com/auth/callback",
-  "https://inc-authors-usa-movie.trycloudflare.com/auth/shopify/callback",
-  "https://inc-authors-usa-movie.trycloudflare.com/api/auth/callback"
+  "https://should-mozambique-dot-certainly.trycloudflare.com/auth/callback",
+  "https://should-mozambique-dot-certainly.trycloudflare.com/auth/shopify/callback",
+  "https://should-mozambique-dot-certainly.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

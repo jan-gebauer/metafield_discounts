@@ -152,3 +152,41 @@ export const getDiscountsUpdatedAfterWithItems = async ({
     },
   );
 };
+
+export const getAutomaticDiscounts = async ({
+  admin,
+  nextCursorParam,
+}: {
+  admin: AdminApiContext<RestResources>;
+  nextCursorParam: string | null;
+}) => {
+  return await admin.graphql(
+    `#graphql
+      query automaticDiscountNodes($nextCursor: String) {
+        automaticDiscountNodes(first: 10, reverse: true, after: $nextCursor) {
+          edges {
+            node {
+              id
+              automaticDiscount {
+                ... on DiscountAutomaticBasic {
+                  title
+                }
+              }
+            }
+          },
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          
+        }
+      }`,
+    {
+      variables: {
+        nextCursor: nextCursorParam,
+      },
+    },
+  );
+};

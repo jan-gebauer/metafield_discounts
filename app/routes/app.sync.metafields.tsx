@@ -11,7 +11,7 @@ import {
   Page,
   TextField,
 } from "@shopify/polaris";
-import { getMetafieldsUpdatedAfter } from "graphql/metafieldQueries";
+import { getMetafieldDefinitionsUpdatedAfter } from "graphql/metafieldQueries";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
 
@@ -24,7 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return "";
   }
 
-  const response = await getMetafieldsUpdatedAfter({
+  const response = await getMetafieldDefinitionsUpdatedAfter({
     admin,
     query: minimumDate.toString(),
     nextCursorParam: null,
@@ -36,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     responseJson.data.metafieldDefinitions.edges,
   );
   while (responseJson.data.metafieldDefinitions.pageInfo.hasNextPage) {
-    const response = await getMetafieldsUpdatedAfter({
+    const response = await getMetafieldDefinitionsUpdatedAfter({
       admin,
       query: minimumDate.toString(),
       nextCursorParam:

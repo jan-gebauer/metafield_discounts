@@ -1,4 +1,7 @@
-export const getMetafieldsUpdatedAfter = async ({
+import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
+import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
+
+export const getMetafieldDefinitionsUpdatedAfter = async ({
   admin,
   nextCursorParam,
   query,
@@ -10,7 +13,7 @@ export const getMetafieldsUpdatedAfter = async ({
   return await admin.graphql(
     `#graphql
       query metafieldDefinitions($nextCursor: String) {
-        metafieldDefinitions(first: 2, reverse: true, after: $nextCursor, query: "updated_at:>=01-01-2022", ownerType: PRODUCT) {
+        metafieldDefinitions(first: 2, reverse: true, after: $nextCursor, ownerType: PRODUCT) {
           edges {
             node {
               id
@@ -32,6 +35,42 @@ export const getMetafieldsUpdatedAfter = async ({
       variables: {
         nextCursor: nextCursorParam,
         query: query,
+      },
+    },
+  );
+};
+
+export const getMetafieldDefinitionsOwnerProduct = async ({
+  admin,
+  nextCursorParam,
+}: {
+  admin: AdminApiContext<RestResources>;
+  nextCursorParam: string | null;
+}) => {
+  return await admin.graphql(
+    `#graphql
+      query metafieldDefinitions($nextCursor: String) {
+        metafieldDefinitions(first: 10, reverse: true, after: $nextCursor, ownerType: PRODUCT) {
+          edges {
+            node {
+              id
+              name
+              namespace
+              key
+            }
+          },
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          
+        }
+      }`,
+    {
+      variables: {
+        nextCursor: nextCursorParam,
       },
     },
   );

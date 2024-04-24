@@ -21,35 +21,52 @@ import {
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
 import { persistDiscountMetafield } from "./app.discounts/persistDiscountMetafield";
+import { getAutomaticDiscounts } from "graphql/discountQueries";
+import { getMetafieldDefinitionsOwnerProduct } from "graphql/metafieldQueries";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await authenticate.admin(request);
+  const { admin } = await authenticate.admin(request);
 
-  // load MetafieldDefinitions
-  let metafieldDefinitions = await prisma.metafieldDefinition.findMany();
-  console.log("YYYYYYYYYYYYYYYYYy");
-  console.log(metafieldDefinitions);
-
-  const discounts = await prisma.discount.findMany();
-  const optionedDiscounts = discounts.map((discount) => {
-    return {
-      label: discount.title,
-      value: discount.id,
-    };
+  const discountResponse = await getAutomaticDiscounts({
+    admin: admin,
+    nextCursorParam: null,
   });
 
-  console.log(discounts);
-
-  const optionedMetafieldDefinitions = metafieldDefinitions.map(
-    (definition) => {
-      return {
-        label: `${definition.name} - ${definition.namespace}.${definition.key}`,
-        value: definition.id,
-      };
+  const discountJson = await discountResponse.json();
+  const discounts = discountJson.data.automaticDiscountNodes.edges.map(
+    (edge: any) => {
+      return { value: edge.node.id, label: edge.node.automaticDiscount.title };
     },
   );
 
-  return { optionedDiscounts, optionedMetafieldDefinitions };
+  const metafieldDefinitionsResponse =
+    await getMetafieldDefinitionsOwnerProduct({
+      admin: admin,
+      nextCursorParam: null,
+    });
+
+  const metafieldDefinitionsJson = await metafieldDefinitionsResponse.json();
+  const metafieldDefinitions =
+    metafieldDefinitionsJson.data.metafieldDefinitions.edges.map(
+      (edge: any) => {
+        return {
+          label: `${edge.node.name} - ${edge.node.namespace}.${edge.node.key}`,
+          value: edge.node.id,
+        };
+      },
+    );
+
+  // This is for when I feel like improving this even further
+  // const metafieldsResponse = await getMetafieldsFromProducts({
+  //   admin: admin,
+  //   nextCursorParam: null,
+  // });
+  // const metafieldsJson = await metafieldsResponse.json();
+  // const metafields = metafieldsJson.data.products.edges.flatMap((edge: any) => {
+  //   return edge.node.metafields.edges;
+  // });
+
+  return { discounts, metafieldDefinitions };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -75,8 +92,8 @@ export default function NewDiscountPage() {
   const [metafieldDefinition, setMetafieldDefinition] = useState("");
   const [discount, setDiscount] = useState("");
   const loadedData: {
-    optionedDiscounts: { label: string; value: string }[];
-    optionedMetafieldDefinitions: { label: string; value: string }[];
+    discounts: { label: string; value: string }[];
+    metafieldDefinitions: { label: string; value: string }[];
   } = useLoaderData();
 
   console.log(loadedData);
@@ -105,9 +122,7 @@ export default function NewDiscountPage() {
                 <FormLayout>
                   <Select
                     label="Metafield Name - Namespace.Key"
-                    options={
-                      loadedData.optionedMetafieldDefinitions as SelectOption[]
-                    }
+                    options={loadedData.metafieldDefinitions as SelectOption[]}
                     onChange={(val) => setMetafieldDefinition(val)}
                     value={metafieldDefinition}
                   />
@@ -119,7 +134,7 @@ export default function NewDiscountPage() {
                   />
                   <Select
                     label="Discount"
-                    options={loadedData.optionedDiscounts as SelectOption[]}
+                    options={loadedData.discounts as SelectOption[]}
                     onChange={setDiscount}
                     value={discount}
                   />
