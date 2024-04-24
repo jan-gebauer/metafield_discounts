@@ -107,8 +107,8 @@ export const getDiscountsUpdatedAfterWithItems = async ({
 }) => {
   return await admin.graphql(
     `#graphql
-      query automaticDiscountNodes($nextCursor: String) {
-        automaticDiscountNodes(first: 2, reverse: true, after: $nextCursor, query: "updated_at:>=01-01-2022") {
+      query automaticDiscountNodes($nextCursor: String, $query: String) {
+        automaticDiscountNodes(first: 2, reverse: true, after: $nextCursor, query: $query) {
           edges {
             node {
               id
@@ -119,10 +119,12 @@ export const getDiscountsUpdatedAfterWithItems = async ({
                   customerGets {
                     items {
                       ... on DiscountProducts {
-                        products {
+                        products(first: 2) {
                           edges {
                             node {
                               id
+                              handle
+                              title
                             }
                           }
                         }

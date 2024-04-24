@@ -67,8 +67,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const resp = await getDiscountsUpdatedAfterWithItems({
     admin: admin,
     nextCursorParam: null,
-    query: "",
+    query: `title:Buy three, get 30 percent off`,
   });
+  console.log("what");
   const respJsonDiscount = await resp.json();
 
   respJsonDiscount.data.automaticDiscountNodes.edges.forEach((edge: any) => {
@@ -105,8 +106,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const productsToRemove = dmu.dmu.active
       ? products.map((product) => product.id)
       : [];
-    console.log(productsToAdd);
-    console.log(productsToRemove);
+    // console.log(productsToAdd);
+    // console.log(productsToRemove);
     const result = await toggleDmu(
       admin,
       dmu.discount.id,
@@ -114,7 +115,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       productsToRemove,
     );
     const respJson = await result.json();
-    console.log(respJson.data);
+    // console.log(respJson.data);
     await prisma.discountMetafieldUnion.update({
       data: {
         active: !dmu.dmu.active,
