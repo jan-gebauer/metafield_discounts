@@ -1,21 +1,11 @@
-import { NavigateFunction, useFetcher, useNavigate } from "@remix-run/react";
-import {
-  Card,
-  BlockStack,
-  IndexTable,
-  Button,
-  Checkbox,
-} from "@shopify/polaris";
-import { XIcon } from "@shopify/polaris-icons";
+import { NavigateFunction, useNavigate } from "@remix-run/react";
+import { Card, BlockStack, IndexTable } from "@shopify/polaris";
 import { DiscountMetafields } from "../app.discounts";
-import { useState } from "react";
 
 const buildRows = (
   data: DiscountMetafields[],
   navigate: NavigateFunction,
   url: string,
-  toggleHandler: () => void,
-  deleteHandler: () => void,
 ) => {
   console.log(data);
   const rows = data.map((discountMetafield, index) => {
@@ -32,20 +22,6 @@ const buildRows = (
           {discountMetafield.metafieldNamespaceKey}
         </IndexTable.Cell>
         <IndexTable.Cell>{discountMetafield.value}</IndexTable.Cell>
-        <IndexTable.Cell>
-          <Checkbox
-            label=""
-            checked={discountMetafield.active}
-            onChange={() => {
-              discountMetafield.active = !discountMetafield.active;
-              console.log(discountMetafield.active);
-              toggleHandler();
-            }}
-          />
-        </IndexTable.Cell>
-        <IndexTable.Cell>
-          <Button icon={XIcon} onClick={deleteHandler} />
-        </IndexTable.Cell>
       </IndexTable.Row>
     );
   });
@@ -56,11 +32,8 @@ const buildRows = (
 export default function DmusOverviewTable(props: {
   url: string;
   data: DiscountMetafields[];
-  toggleHandler: () => void;
-  deleteHandler: () => void;
 }) {
   const navigate = useNavigate();
-  const [testState, setTestState] = useState(false);
 
   return (
     <Card>
@@ -71,8 +44,6 @@ export default function DmusOverviewTable(props: {
             { title: "Discount" },
             { title: "Metafield" },
             { title: "Metafield value" },
-            { title: "Toggle" },
-            { title: "Delete" },
           ]}
           itemCount={10}
           pagination={{
@@ -90,32 +61,7 @@ export default function DmusOverviewTable(props: {
             },
           }}
         >
-          {buildRows(
-            props.data,
-            navigate,
-            props.url,
-            props.toggleHandler,
-            props.deleteHandler,
-          )}
-          <IndexTable.Row id={"asd"} key={"asd"} position={69}>
-            <IndexTable.Cell>{"test"}</IndexTable.Cell>
-            <IndexTable.Cell>{"test"}</IndexTable.Cell>
-            <IndexTable.Cell>{"test"}</IndexTable.Cell>
-            <IndexTable.Cell>
-              <Checkbox
-                label=""
-                checked={testState}
-                onChange={() => {
-                  setTestState(!testState);
-                  console.log(testState);
-                  // toggleHandler();
-                }}
-              />
-            </IndexTable.Cell>
-            <IndexTable.Cell>
-              <Button icon={XIcon} onClick={() => console.log("hi")} />
-            </IndexTable.Cell>
-          </IndexTable.Row>
+          {buildRows(props.data, navigate, props.url)}
         </IndexTable>
       </BlockStack>
     </Card>

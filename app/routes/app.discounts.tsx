@@ -56,12 +56,7 @@ export default function ProductsPage() {
                 Create a discount
               </Button>
               <Outlet />
-              <DmusOverviewTable
-                data={discountMetafields}
-                url={"/app/dmu"}
-                toggleHandler={() => console.log("toggle")}
-                deleteHandler={() => console.log("delete")}
-              />
+              <DmusOverviewTable data={discountMetafields} url={"/app/dmu"} />
             </BlockStack>
           </Card>
         </Layout.Section>
