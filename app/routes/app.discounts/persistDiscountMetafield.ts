@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, TypedResponse, json } from "@remix-run/node";
 
-export const persistDiscountMetafield = async ({
+export const persistDmu = async ({
   formData,
 }: {
   formData: FormData;
@@ -18,30 +18,12 @@ export const persistDiscountMetafield = async ({
     });
   }
 
-  const metafieldValueEntity = await prisma.metafieldValue.findUnique({
-    where: {
-      value: metafieldValue.toString(),
-    },
-  });
-
-  if (!metafieldValueEntity || !metafieldValueEntity.value) {
-    return json({
-      error: "Missing data - metafieldValue is not in the db",
-      metafieldDefinitionId: metafieldDefinition,
-      metafieldValue,
-      discount,
-    });
-  }
-
-  console.log(metafieldValueEntity?.value);
-  console.log(metafieldDefinition, metafieldValue, discount);
-
-  const persisted = await prisma.discountMetafieldUnion.create({
+  const persisted = await prisma.dmu.create({
     data: {
-      active: false,
       discount_id: discount.toString(),
-      metafieldDefinitionId: metafieldDefinition.toString(),
-      metafield_value_id: metafieldValueEntity.id,
+      metafield_definition_id: metafieldDefinition.toString(),
+      metafield_value: metafieldValue.toString(),
+      active: false,
     },
   });
 

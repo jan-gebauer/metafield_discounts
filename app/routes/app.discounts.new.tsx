@@ -1,4 +1,3 @@
-import { Discount } from "@prisma/client";
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import {
   Outlet,
@@ -20,7 +19,7 @@ import {
 } from "@shopify/polaris";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
-import { persistDiscountMetafield } from "./app.discounts/persistDiscountMetafield";
+import { persistDmu } from "./app.discounts/persistDiscountMetafield";
 import { getAutomaticDiscounts } from "graphql/discountQueries";
 import { getMetafieldDefinitionsOwnerProduct } from "graphql/metafieldQueries";
 
@@ -70,17 +69,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin } = await authenticate.admin(request);
-
-  // get the data
-  // update the discount by adding to the metafields
-  console.log("submit");
+  await authenticate.admin(request);
 
   const formData = await request.formData();
   formData.forEach((value, key) => {
     console.log(key, value);
   });
-  const result = persistDiscountMetafield({ formData: formData });
+  const result = await persistDmu({ formData: formData });
 
   return result;
 };
