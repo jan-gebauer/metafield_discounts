@@ -23,6 +23,7 @@ model Session {
 
 model Dmu {
   id                      String  @id @default(uuid())
+  store_id                 String
   discount_id             String
   metafield_definition_id String
   metafield_value         String

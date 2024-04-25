@@ -1,8 +1,4 @@
-import {
-  Discount,
-  DiscountMetafieldUnion,
-  MetafieldDefinition,
-} from "@prisma/client";
+import { Dmu } from "@prisma/client";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -23,9 +19,14 @@ import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/t
 import { authenticate } from "~/shopify.server";
 
 export type DmuPackage = {
-  dmu: DiscountMetafieldUnion;
-  discount: Discount;
-  metafieldDefinition: MetafieldDefinition;
+  dmu: Dmu;
+  discount: { id: string; title: string };
+  metafieldDefinition: {
+    id: any;
+    name: any;
+    namespace: any;
+    key: any;
+  };
   metafieldValue: string;
 };
 
@@ -102,7 +103,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function DiscountMetafield() {
-  const dmuPackage: DmuPackage = useLoaderData();
+  const dmuPackage: any = useLoaderData();
 
   const submit = useSubmit();
 

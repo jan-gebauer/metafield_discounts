@@ -22,6 +22,7 @@ import { authenticate } from "~/shopify.server";
 import { persistDmu } from "./app.discounts/persistDiscountMetafield";
 import { getAutomaticDiscounts } from "graphql/discountQueries";
 import { getMetafieldDefinitionsOwnerProduct } from "graphql/metafieldQueries";
+import { getStoreId } from "graphql/storeQueries";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
@@ -83,9 +84,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await authenticate.admin(request);
+  const { admin } = await authenticate.admin(request);
+
+  const storeRequest = await getStoreId({
+    admin: admin,
+  });
+  const storeJson = await storeRequest.json();
+  const storeId = storeJson.data.shop.id;
 
   const formData = await request.formData();
+  formData.append("storeId", storeId);
   const result = await persistDmu({ formData: formData });
 
   return result;
@@ -133,7 +141,7 @@ export default function NewDiscountPage() {
                     value={metafieldDefinition}
                   />
                   <TextField
-                    label="Enter a metafield value and pray"
+                    label="Enter a metafield value"
                     value={metafieldValue}
                     onChange={setMetafieldValue}
                     autoComplete="off"

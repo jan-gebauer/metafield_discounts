@@ -1,7 +1,13 @@
 import { DiscountMetafields } from "../app.discounts";
 
-export const loadDmus = async (): Promise<DiscountMetafields[]> => {
-  const dmus = await prisma.dmu.findMany();
+export const loadDmus = async (
+  storeId: string,
+): Promise<DiscountMetafields[]> => {
+  const dmus = await prisma.dmu.findMany({
+    where: {
+      store_id: storeId,
+    },
+  });
 
   return dmus.map((dmu) => {
     return {

@@ -16,6 +16,7 @@ import {
 import { authenticate } from "~/shopify.server";
 import DmusOverviewTable from "./app.discounts/DmusOverviewTable";
 import { loadDmus } from "./app.discounts/loadDiscountMetafields";
+import { getStoreId } from "graphql/storeQueries";
 
 export type DiscountMetafields = {
   dmuId: string;
@@ -28,9 +29,15 @@ export type DiscountMetafields = {
 export const loader = async ({
   request,
 }: LoaderFunctionArgs): Promise<DiscountMetafields[]> => {
-  await authenticate.admin(request);
+  const { admin } = await authenticate.admin(request);
 
-  return await loadDmus();
+  const storeRequest = await getStoreId({
+    admin: admin,
+  });
+  const storeJson = await storeRequest.json();
+  const storeId = storeJson.data.shop.id;
+
+  return await loadDmus(storeId);
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

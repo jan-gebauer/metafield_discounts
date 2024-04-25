@@ -8,10 +8,12 @@ export const persistDmu = async ({
   const metafieldDefinition = formData.get("metafieldDefinition");
   const metafieldValue = formData.get("metafieldValue");
   const discount = formData.get("discount");
+  const storeId = formData.get("storeId");
 
-  if (!metafieldDefinition || !metafieldValue || !discount) {
+  if (!metafieldDefinition || !metafieldValue || !discount || !storeId) {
     return json({
       error: "Missing data",
+      storeId: storeId,
       metafieldDefinitionId: metafieldDefinition,
       metafieldValue,
       discount,
@@ -20,6 +22,7 @@ export const persistDmu = async ({
 
   const persisted = await prisma.dmu.create({
     data: {
+      store_id: storeId.toString(),
       discount_id: discount.toString(),
       metafield_definition_id: metafieldDefinition.toString(),
       metafield_value: metafieldValue.toString(),
