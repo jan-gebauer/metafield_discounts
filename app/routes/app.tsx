@@ -24,7 +24,6 @@ export default function App() {
           Home
         </Link>
         <Link to="/app/discounts">Apply discount</Link>
-        <Link to="/app/sync">Sync Products</Link>
         <Link to="/app/workflows">Workflows</Link>
       </ui-nav-menu>
       <Outlet />
