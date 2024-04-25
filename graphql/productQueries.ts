@@ -141,3 +141,46 @@ export const getMetafieldsFromProducts = async ({
     },
   );
 };
+
+export const getProductsWithMetafields = async ({
+  admin,
+  nextCursorParam,
+}: {
+  admin: AdminApiContext<RestResources>;
+  nextCursorParam: string | null;
+}) => {
+  return await admin.graphql(
+    `#graphql
+      query products($nextCursor: String) {
+        products(first: 10, reverse: true, after: $nextCursor) {
+          edges {
+            node {
+              id
+              metafields(first: 10) {
+                edges {
+                  node {
+                    id
+                    namespace
+                    key
+                    value
+                  }
+                }
+              }
+            }
+          },
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          
+        }
+      }`,
+    {
+      variables: {
+        nextCursor: nextCursorParam,
+      },
+    },
+  );
+};

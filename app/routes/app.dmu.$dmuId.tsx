@@ -18,6 +18,7 @@ import {
 } from "graphql/discountQueries";
 import { toggleDmu } from "graphql/dmuQueries";
 import { getMetafieldDefinition } from "graphql/metafieldQueries";
+import { getProductsWithMetafields } from "graphql/productQueries";
 import { authenticate } from "~/shopify.server";
 
 export type DmuPackage = {
@@ -80,66 +81,80 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
   const formData = await request.formData();
   const formDmu = formData.get("dmu");
-  const dmu = JSON.parse(formDmu?.toString()!) as DmuPackage;
+  const dmuPackage = JSON.parse(formDmu?.toString()!) as DmuPackage;
 
-  const resp = await getDiscountsUpdatedAfterWithItems({
-    admin: admin,
-    nextCursorParam: null,
-    query: `title:Buy three, get 30 percent off`,
-  });
-  console.log("what");
-  const respJsonDiscount = await resp.json();
-
-  respJsonDiscount.data.automaticDiscountNodes.edges.forEach((edge: any) => {
-    console.log(edge.node.automaticDiscount);
-    if (edge.node.automaticDiscount) {
-      console.log(edge.node.automaticDiscount.customerGets);
-    }
-  });
   if (request.method == "DELETE") {
     console.log("deleting");
-    await prisma.discountMetafieldUnion.delete({
+    await prisma.dmu.delete({
       where: {
-        id: dmu.dmu.id,
+        id: dmuPackage.dmu.id,
       },
     });
     return redirect("/app/discounts");
   }
   if (request.method == "POST") {
     console.log("toggling");
-    console.log(dmu.discount.title);
-    const products = await prisma.item.findMany({
-      where: {
-        Metafield: {
-          every: {
-            metafieldDefinitionId: dmu.metafieldDefinition.id,
-            metafield_value_id: dmu.metafieldValue.id,
-          },
-        },
-      },
+
+    const productsResponse = await getProductsWithMetafields({
+      admin: admin,
+      nextCursorParam: null,
     });
-    const productsToAdd = dmu.dmu.active
+
+    const productsJson = await productsResponse.json();
+
+    let metafieldsWithProduct: {
+      productId: string;
+      metafieldDefinitionNamespace: string;
+      metafieldDefinitionKey: string;
+      metafieldValue: string;
+    }[] = [];
+    productsJson.data.products.edges.forEach((edge: any) => {
+      edge.node.metafields.edges.forEach((mEdge: any) => {
+        metafieldsWithProduct.push({
+          productId: edge.node.id,
+          metafieldDefinitionNamespace: mEdge.node.namespace,
+          metafieldDefinitionKey: mEdge.node.key,
+          metafieldValue: mEdge.node.value,
+        });
+      });
+    });
+
+    const processedMetafields = metafieldsWithProduct.filter(
+      (metafield: {
+        productId: string;
+        metafieldDefinitionNamespace: string;
+        metafieldDefinitionKey: string;
+        metafieldValue: string;
+      }) => {
+        return (
+          metafield.metafieldDefinitionNamespace ==
+            dmuPackage.metafieldDefinition.namespace &&
+          metafield.metafieldDefinitionKey ==
+            dmuPackage.metafieldDefinition.key &&
+          metafield.metafieldValue == dmuPackage.metafieldValue
+        );
+      },
+    );
+
+    const productsToAdd = dmuPackage.dmu.active
       ? []
-      : products.map((product) => product.id);
-    const productsToRemove = dmu.dmu.active
-      ? products.map((product) => product.id)
+      : processedMetafields.map((metafield) => metafield.productId);
+    const productsToRemove = dmuPackage.dmu.active
+      ? processedMetafields.map((metafield) => metafield.productId)
       : [];
-    // console.log(productsToAdd);
-    // console.log(productsToRemove);
-    const result = await toggleDmu(
+    await toggleDmu(
       admin,
-      dmu.discount.id,
+      dmuPackage.discount.id,
       productsToAdd,
       productsToRemove,
     );
-    const respJson = await result.json();
-    // console.log(respJson.data);
-    await prisma.discountMetafieldUnion.update({
+
+    await prisma.dmu.update({
       data: {
-        active: !dmu.dmu.active,
+        active: !dmuPackage.dmu.active,
       },
       where: {
-        id: dmu.dmu.id,
+        id: dmuPackage.dmu.id,
       },
     });
   }
