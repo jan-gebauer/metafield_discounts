@@ -72,9 +72,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   await authenticate.admin(request);
 
   const formData = await request.formData();
-  formData.forEach((value, key) => {
-    console.log(key, value);
-  });
   const result = await persistDmu({ formData: formData });
 
   return result;

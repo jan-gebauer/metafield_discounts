@@ -4,7 +4,7 @@ import { DmuPackage } from "~/routes/app.dmu.$dmuId";
 import { DiscountAutomaticBasicInput } from "~/types/admin.types";
 import { getDiscountsUpdatedAfterWithItems } from "./discountQueries";
 
-export async function toggleDmu(
+export async function requestDmuToggle(
   admin: AdminApiContext<RestResources>,
   discountId: string,
   productIdsToRemove: string[],

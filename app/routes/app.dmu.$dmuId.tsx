@@ -2,7 +2,6 @@ import {
   Discount,
   DiscountMetafieldUnion,
   MetafieldDefinition,
-  MetafieldValue,
 } from "@prisma/client";
 import {
   ActionFunctionArgs,
@@ -12,13 +11,12 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, useSubmit } from "@remix-run/react";
 import { BlockStack, Button, Card, Layout, Page } from "@shopify/polaris";
-import {
-  getDiscountWithId,
-  getDiscountsUpdatedAfterWithItems,
-} from "graphql/discountQueries";
-import { toggleDmu } from "graphql/dmuQueries";
+import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
+import { getDiscountWithId } from "graphql/discountQueries";
+import { requestDmuToggle } from "graphql/dmuQueries";
 import { getMetafieldDefinition } from "graphql/metafieldQueries";
 import { getProductsWithMetafields } from "graphql/productQueries";
+import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
 import { authenticate } from "~/shopify.server";
 
 export type DmuPackage = {
@@ -85,6 +83,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (request.method == "DELETE") {
     console.log("deleting");
+    toggleDmu(admin, dmuPackage, false);
     await prisma.dmu.delete({
       where: {
         id: dmuPackage.dmu.id,
@@ -95,70 +94,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (request.method == "POST") {
     console.log("toggling");
 
-    const productsResponse = await getProductsWithMetafields({
-      admin: admin,
-      nextCursorParam: null,
-    });
+    toggleDmu(admin, dmuPackage, !dmuPackage.dmu.active);
 
-    const productsJson = await productsResponse.json();
-
-    let metafieldsWithProduct: {
-      productId: string;
-      metafieldDefinitionNamespace: string;
-      metafieldDefinitionKey: string;
-      metafieldValue: string;
-    }[] = [];
-    productsJson.data.products.edges.forEach((edge: any) => {
-      edge.node.metafields.edges.forEach((mEdge: any) => {
-        metafieldsWithProduct.push({
-          productId: edge.node.id,
-          metafieldDefinitionNamespace: mEdge.node.namespace,
-          metafieldDefinitionKey: mEdge.node.key,
-          metafieldValue: mEdge.node.value,
-        });
-      });
-    });
-
-    const processedMetafields = metafieldsWithProduct.filter(
-      (metafield: {
-        productId: string;
-        metafieldDefinitionNamespace: string;
-        metafieldDefinitionKey: string;
-        metafieldValue: string;
-      }) => {
-        return (
-          metafield.metafieldDefinitionNamespace ==
-            dmuPackage.metafieldDefinition.namespace &&
-          metafield.metafieldDefinitionKey ==
-            dmuPackage.metafieldDefinition.key &&
-          metafield.metafieldValue == dmuPackage.metafieldValue
-        );
-      },
-    );
-
-    const productsToAdd = dmuPackage.dmu.active
-      ? []
-      : processedMetafields.map((metafield) => metafield.productId);
-    const productsToRemove = dmuPackage.dmu.active
-      ? processedMetafields.map((metafield) => metafield.productId)
-      : [];
-    await toggleDmu(
-      admin,
-      dmuPackage.discount.id,
-      productsToAdd,
-      productsToRemove,
-    );
-
-    await prisma.dmu.update({
-      data: {
-        active: !dmuPackage.dmu.active,
-      },
-      where: {
-        id: dmuPackage.dmu.id,
-      },
-    });
+    return json({});
   }
-  return json({});
 };
 
 export default function DiscountMetafield() {
@@ -197,7 +136,7 @@ export default function DiscountMetafield() {
                   submit(formData, { method: "DELETE" });
                 }}
               >
-                Delete
+                Disable and Delete
               </Button>
             </BlockStack>
           </Card>
@@ -206,3 +145,72 @@ export default function DiscountMetafield() {
     </Page>
   );
 }
+
+const toggleDmu = async (
+  admin: AdminApiContext<RestResources>,
+  dmuPackage: DmuPackage,
+  desiredState: boolean,
+) => {
+  const productsResponse = await getProductsWithMetafields({
+    admin: admin,
+    nextCursorParam: null,
+  });
+
+  const productsJson = await productsResponse.json();
+
+  let metafieldsWithProduct: {
+    productId: string;
+    metafieldDefinitionNamespace: string;
+    metafieldDefinitionKey: string;
+    metafieldValue: string;
+  }[] = [];
+  productsJson.data.products.edges.forEach((edge: any) => {
+    edge.node.metafields.edges.forEach((mEdge: any) => {
+      metafieldsWithProduct.push({
+        productId: edge.node.id,
+        metafieldDefinitionNamespace: mEdge.node.namespace,
+        metafieldDefinitionKey: mEdge.node.key,
+        metafieldValue: mEdge.node.value,
+      });
+    });
+  });
+
+  const processedMetafields = metafieldsWithProduct.filter(
+    (metafield: {
+      productId: string;
+      metafieldDefinitionNamespace: string;
+      metafieldDefinitionKey: string;
+      metafieldValue: string;
+    }) => {
+      return (
+        metafield.metafieldDefinitionNamespace ==
+          dmuPackage.metafieldDefinition.namespace &&
+        metafield.metafieldDefinitionKey ==
+          dmuPackage.metafieldDefinition.key &&
+        metafield.metafieldValue == dmuPackage.metafieldValue
+      );
+    },
+  );
+
+  const productsToAdd = desiredState
+    ? []
+    : processedMetafields.map((metafield) => metafield.productId);
+  const productsToRemove = desiredState
+    ? processedMetafields.map((metafield) => metafield.productId)
+    : [];
+  await requestDmuToggle(
+    admin,
+    dmuPackage.discount.id,
+    productsToAdd,
+    productsToRemove,
+  );
+
+  await prisma.dmu.update({
+    data: {
+      active: desiredState,
+    },
+    where: {
+      id: dmuPackage.dmu.id,
+    },
+  });
+};
