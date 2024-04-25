@@ -1,8 +1,6 @@
 import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
 import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
-import { DmuPackage } from "~/routes/app.dmu.$dmuId";
 import { DiscountAutomaticBasicInput } from "~/types/admin.types";
-import { getDiscountsUpdatedAfterWithItems } from "./discountQueries";
 
 export async function requestDmuToggle(
   admin: AdminApiContext<RestResources>,
