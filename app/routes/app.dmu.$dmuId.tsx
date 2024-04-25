@@ -18,7 +18,6 @@ import { getMetafieldDefinition } from "graphql/metafieldQueries";
 import {
   getMetafieldsFromProduct,
   getProductsOnlyIds,
-  getProductsWithMetafields,
 } from "graphql/productQueries";
 import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
 import { authenticate } from "~/shopify.server";
@@ -32,8 +31,6 @@ export type DmuPackage = {
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const { admin } = await authenticate.admin(request);
-
-  console.log("XXXXXXXXXXx");
 
   const dmu = await prisma.dmu.findUnique({
     where: { id: params.dmuId },
