@@ -21,61 +21,6 @@ model Session {
   userId      BigInt?
 }
 
-model Item {
-  id        String      @id
-  handle    String      @unique
-  title     String
-  Metafield Metafield[]
-}
-
-model MetafieldDefinition {
-  id                     String                   @id @default(uuid())
-  name                   String
-  namespace              String
-  key                    String
-  Metafield              Metafield[]
-  DiscountMetafieldUnion DiscountMetafieldUnion[]
-}
-
-model Metafield {
-  id                    String              @id
-  item                  Item                @relation(fields: [item_id], references: [id])
-  item_id               String
-  metafieldDefinition   MetafieldDefinition @relation(fields: [metafieldDefinitionId], references: [id])
-  metafieldDefinitionId String              @map("metafield_definition_id")
-  metafield_value       MetafieldValue      @relation(fields: [metafield_value_id], references: [id])
-  metafield_value_id    String
-  type                  String
-  description           String
-}
-
-model Discount {
-  id                     String                   @id
-  title                  String
-  summary                String
-  DiscountMetafieldUnion DiscountMetafieldUnion[]
-}
-
-model MetafieldValue {
-  id                     String                   @id @default(uuid())
-  value                  String                   @unique
-  Metafield              Metafield[]
-  DiscountMetafieldUnion DiscountMetafieldUnion[]
-}
-
-model DiscountMetafieldUnion {
-  id                    String              @id @default(uuid())
-  discount              Discount            @relation(fields: [discount_id], references: [id])
-  discount_id           String
-  metafieldDefinition   MetafieldDefinition @relation(fields: [metafieldDefinitionId], references: [id])
-  metafieldDefinitionId String              @map("metafield_definition_id")
-  metafield_value       MetafieldValue      @relation(fields: [metafield_value_id], references: [id])
-  metafield_value_id    String
-  active                Boolean
-
-  @@unique([discount_id, metafieldDefinitionId, metafield_value_id])
-}
-
 model Dmu {
   id                      String  @id @default(uuid())
   discount_id             String
