@@ -15,7 +15,11 @@ import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
 import { getDiscountWithId } from "graphql/discountQueries";
 import { requestDmuToggle } from "graphql/dmuQueries";
 import { getMetafieldDefinition } from "graphql/metafieldQueries";
-import { getProductsWithMetafields } from "graphql/productQueries";
+import {
+  getMetafieldsFromProduct,
+  getProductsOnlyIds,
+  getProductsWithMetafields,
+} from "graphql/productQueries";
 import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
 import { authenticate } from "~/shopify.server";
 
@@ -151,52 +155,63 @@ const toggleDmu = async (
   dmuPackage: DmuPackage,
   desiredState: boolean,
 ) => {
-  const productsResponse = await getProductsWithMetafields({
+  const productsIdsResponse = await getProductsOnlyIds({
     admin: admin,
     nextCursorParam: null,
   });
 
-  const productsJson = await productsResponse.json();
+  let productsIdsJson = await productsIdsResponse.json();
 
-  let metafieldsWithProduct: {
-    productId: string;
-    metafieldDefinitionNamespace: string;
-    metafieldDefinitionKey: string;
-    metafieldValue: string;
-  }[] = [];
-  productsJson.data.products.edges.forEach((edge: any) => {
-    edge.node.metafields.edges.forEach((mEdge: any) => {
-      metafieldsWithProduct.push({
-        productId: edge.node.id,
-        metafieldDefinitionNamespace: mEdge.node.namespace,
-        metafieldDefinitionKey: mEdge.node.key,
-        metafieldValue: mEdge.node.value,
-      });
-    });
+  let productsIds = productsIdsJson.data.products.edges.map((edge: any) => {
+    return edge.node.id;
   });
 
-  const processedMetafields = metafieldsWithProduct.filter(
-    (metafield: {
-      productId: string;
-      metafieldDefinitionNamespace: string;
-      metafieldDefinitionKey: string;
-      metafieldValue: string;
-    }) => {
-      return (
-        metafield.metafieldDefinitionNamespace ==
-          dmuPackage.metafieldDefinition.namespace &&
-        metafield.metafieldDefinitionKey ==
-          dmuPackage.metafieldDefinition.key &&
-        metafield.metafieldValue == dmuPackage.metafieldValue
-      );
-    },
-  );
+  while (productsIdsJson.data.products.pageInfo.hasNextPage) {
+    const productsIdsResponse = await getProductsOnlyIds({
+      admin: admin,
+      nextCursorParam: productsIdsJson.data.products.pageInfo.endCursor,
+    });
+    productsIdsJson = await productsIdsResponse.json();
+    productsIds = productsIds.concat(
+      productsIdsJson.data.products.edges.map((edge: any) => {
+        return edge.node.id;
+      }),
+    );
+  }
+
+  let metafieldSet: Set<string> = new Set();
+  for (const productId of productsIds) {
+    const metafieldsResponse = await getMetafieldsFromProduct({
+      admin: admin,
+      nextCursorParam: null,
+      productId: productId,
+    });
+    const metafieldsJson = await metafieldsResponse.json();
+    for (const edge of metafieldsJson.data.product.metafields.edges) {
+      const metafieldPackage = {
+        productId: productId,
+        metafieldDefinitionNamespace: edge.node.namespace,
+        metafieldDefinitionKey: edge.node.key,
+        metafieldValue: edge.node.value,
+      };
+      metafieldSet.add(JSON.stringify(metafieldPackage));
+    }
+  }
+  const stringedMetafields = [...metafieldSet];
+  let metafields: {
+    productId: string;
+    namespace: string;
+    key: string;
+    value: string;
+  }[] = stringedMetafields.map((metafield) => {
+    return JSON.parse(metafield);
+  });
 
   const productsToAdd = desiredState
     ? []
-    : processedMetafields.map((metafield) => metafield.productId);
+    : metafields.map((metafield) => metafield.productId);
   const productsToRemove = desiredState
-    ? processedMetafields.map((metafield) => metafield.productId)
+    ? metafields.map((metafield) => metafield.productId)
     : [];
   await requestDmuToggle(
     admin,

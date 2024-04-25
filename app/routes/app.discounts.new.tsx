@@ -31,12 +31,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     nextCursorParam: null,
   });
 
-  const discountJson = await discountResponse.json();
-  const discounts = discountJson.data.automaticDiscountNodes.edges.map(
+  let discountJson = await discountResponse.json();
+  let discounts = discountJson.data.automaticDiscountNodes.edges.map(
     (edge: any) => {
       return { value: edge.node.id, label: edge.node.automaticDiscount.title };
     },
   );
+  while (discountJson.data.automaticDiscountNodes.pageInfo.hasNextPage) {
+    const discountResponse = await getAutomaticDiscounts({
+      admin: admin,
+      nextCursorParam:
+        discountJson.data.automaticDiscountNodes.pageInfo.endCursor,
+    });
+    discountJson = await discountResponse.json();
+    discountJson.data.automaticDiscountNodes.edges.forEach((edge: any) => {
+      discounts.push({
+        value: edge.node.id,
+        label: edge.node.automaticDiscount.title,
+      });
+    });
+  }
 
   const metafieldDefinitionsResponse =
     await getMetafieldDefinitionsOwnerProduct({
