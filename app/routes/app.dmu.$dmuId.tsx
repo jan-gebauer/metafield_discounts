@@ -12,21 +12,27 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, useSubmit } from "@remix-run/react";
 import { BlockStack, Button, Card, Layout, Page } from "@shopify/polaris";
-import { getDiscountsUpdatedAfterWithItems } from "graphql/discountQueries";
+import {
+  getDiscountWithId,
+  getDiscountsUpdatedAfterWithItems,
+} from "graphql/discountQueries";
 import { toggleDmu } from "graphql/dmuQueries";
+import { getMetafieldDefinition } from "graphql/metafieldQueries";
 import { authenticate } from "~/shopify.server";
 
 export type DmuPackage = {
   dmu: DiscountMetafieldUnion;
   discount: Discount;
   metafieldDefinition: MetafieldDefinition;
-  metafieldValue: MetafieldValue;
+  metafieldValue: string;
 };
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  await authenticate.admin(request);
+  const { admin } = await authenticate.admin(request);
 
-  const dmu = await prisma.discountMetafieldUnion.findUnique({
+  console.log("XXXXXXXXXXx");
+
+  const dmu = await prisma.dmu.findUnique({
     where: { id: params.dmuId },
   });
 
@@ -37,25 +43,37 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     });
   }
 
-  console.log(dmu);
-
-  const discount = await prisma.discount.findUnique({
-    where: {
-      id: dmu.discount_id,
-    },
-  });
-  const metafieldDefinition = await prisma.metafieldDefinition.findUnique({
-    where: {
-      id: dmu.metafieldDefinitionId,
-    },
-  });
-  const metafieldValue = await prisma.metafieldValue.findUnique({
-    where: {
-      id: dmu.metafield_value_id,
-    },
+  const discountResponse = await getDiscountWithId({
+    admin: admin,
+    id: dmu?.discount_id!,
   });
 
-  return { dmu, discount, metafieldDefinition, metafieldValue };
+  const discountJson = await discountResponse.json();
+
+  const discount = {
+    id: discountJson.data.automaticDiscountNode.id,
+    title: discountJson.data.automaticDiscountNode.automaticDiscount.title,
+  };
+
+  const metafieldDefinitionResponse = await getMetafieldDefinition({
+    admin: admin,
+    id: dmu?.metafield_definition_id!,
+  });
+  const metafieldDefinitionJson = await metafieldDefinitionResponse.json();
+
+  const metafieldDefinition = {
+    id: metafieldDefinitionJson.data.metafieldDefinition.id,
+    name: metafieldDefinitionJson.data.metafieldDefinition.name,
+    namespace: metafieldDefinitionJson.data.metafieldDefinition.namespace,
+    key: metafieldDefinitionJson.data.metafieldDefinition.key,
+  };
+
+  return {
+    dmu: dmu,
+    discount: discount,
+    metafieldDefinition: metafieldDefinition,
+    metafieldValue: dmu.metafield_value,
+  };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -129,12 +147,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function DiscountMetafield() {
-  const dmu: DmuPackage = useLoaderData();
+  const dmuPackage: DmuPackage = useLoaderData();
 
   const submit = useSubmit();
 
   const formData = new FormData();
-  formData.append("dmu", JSON.stringify(dmu));
+  formData.append("dmu", JSON.stringify(dmuPackage));
 
   return (
     <Page>
@@ -143,20 +161,21 @@ export default function DiscountMetafield() {
         <Layout.Section>
           <Card>
             <BlockStack gap="300">
-              Discount title: {dmu.discount.title}
+              Discount title: {dmuPackage.discount.title}
               <br />
-              Metafield namespace.key: {dmu.metafieldDefinition.namespace}.
-              {dmu.metafieldDefinition.key}
+              Metafield namespace.key:{" "}
+              {dmuPackage.metafieldDefinition.namespace}.
+              {dmuPackage.metafieldDefinition.key}
               <br />
-              Metafield value: {dmu.metafieldValue.value}
+              Metafield value: {dmuPackage.metafieldValue}
               <br />
-              {dmu.dmu.active ? "Active" : "Inactive"}
+              {dmuPackage.dmu.active ? "Active" : "Inactive"}
               <Button
                 onClick={() => {
                   submit(formData, { method: "POST" });
                 }}
               >
-                {dmu.dmu.active ? "Disable" : "Enable"}
+                {dmuPackage.dmu.active ? "Disable" : "Enable"}
               </Button>
               <Button
                 onClick={() => {

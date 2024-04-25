@@ -190,3 +190,32 @@ export const getAutomaticDiscounts = async ({
     },
   );
 };
+
+export const getDiscountWithId = async ({
+  admin,
+  id,
+}: {
+  admin: AdminApiContext<RestResources>;
+  id: string;
+}) => {
+  return await admin.graphql(
+    `#graphql
+      query automaticDiscountNode($id: ID!) {
+        automaticDiscountNode(id: $id) {
+          ... on DiscountAutomaticNode {
+            id
+            automaticDiscount {
+              ... on DiscountAutomaticBasic {
+                title
+              }
+            }
+          }
+        }
+      }`,
+    {
+      variables: {
+        id: id,
+      },
+    },
+  );
+};

@@ -75,3 +75,28 @@ export const getMetafieldDefinitionsOwnerProduct = async ({
     },
   );
 };
+
+export const getMetafieldDefinition = async ({
+  admin,
+  id,
+}: {
+  admin: AdminApiContext<RestResources>;
+  id: String;
+}) => {
+  return await admin.graphql(
+    `#graphql
+      query metafieldDefinition($id: ID!) {
+        metafieldDefinition(id: $id) {
+          id,
+          namespace,
+          key,
+          name
+        }
+      }`,
+    {
+      variables: {
+        id: id,
+      },
+    },
+  );
+};
