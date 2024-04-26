@@ -10,7 +10,7 @@ ENV NODE_ENV=production
 RUN npm install --omit=dev
 # Remove CLI packages since we don't need them in production by default.
 # Remove this line if you want to run CLI commands in your container.
-RUN npm remove @shopify/app @shopify/cli
+RUN npm remove @shopify/cli
 RUN npx prisma generate
 RUN npm run build
 
