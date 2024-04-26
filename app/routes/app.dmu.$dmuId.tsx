@@ -15,7 +15,7 @@ import {
   getMetafieldsFromProduct,
   getProductsOnlyIds,
 } from "graphql/productQueries";
-import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
+import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/dist/ts/server/clients";
 import { authenticate } from "~/shopify.server";
 
 export type DmuPackage = {

@@ -3,7 +3,7 @@
 client_id = "b3fd28c598851912e5da46b0017abb6a"
 name = "Metafield Discounts"
 handle = "metafield-discounts"
-application_url = "https://northeast-propecia-sydney-acre.trycloudflare.com"
+application_url = "https://americas-breeds-suspected-studying.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://northeast-propecia-sydney-acre.trycloudflare.com/auth/callback",
-  "https://northeast-propecia-sydney-acre.trycloudflare.com/auth/shopify/callback",
-  "https://northeast-propecia-sydney-acre.trycloudflare.com/api/auth/callback"
+  "https://americas-breeds-suspected-studying.trycloudflare.com/auth/callback",
+  "https://americas-breeds-suspected-studying.trycloudflare.com/auth/shopify/callback",
+  "https://americas-breeds-suspected-studying.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

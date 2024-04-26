@@ -1,5 +1,5 @@
 import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
-import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
+import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/dist/ts/server/clients";
 
 export const getProductsOnlyIds = async ({
   admin,
