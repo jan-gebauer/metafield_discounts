@@ -49,25 +49,15 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     id: dmu?.discount_id!,
   });
 
-  const discountJson = await discountResponse.json();
-
   const discount = {
-    id: discountJson.data.automaticDiscountNode.id,
-    title: discountJson.data.automaticDiscountNode.automaticDiscount.title,
+    id: discountResponse.id,
+    title: discountResponse.automaticDiscount.title,
   };
 
-  const metafieldDefinitionResponse = await getMetafieldDefinition({
+  const metafieldDefinition = await getMetafieldDefinition({
     admin: admin,
     id: dmu?.metafield_definition_id!,
   });
-  const metafieldDefinitionJson = await metafieldDefinitionResponse.json();
-
-  const metafieldDefinition = {
-    id: metafieldDefinitionJson.data.metafieldDefinition.id,
-    name: metafieldDefinitionJson.data.metafieldDefinition.name,
-    namespace: metafieldDefinitionJson.data.metafieldDefinition.namespace,
-    key: metafieldDefinitionJson.data.metafieldDefinition.key,
-  };
 
   return {
     dmu: dmu,
