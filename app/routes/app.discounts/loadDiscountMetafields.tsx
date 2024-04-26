@@ -1,6 +1,11 @@
+import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/build/ts/server/clients";
 import { DiscountMetafields } from "../app.discounts";
+import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
+import { getDiscountWithId } from "graphql/discountQueries";
+import { getMetafieldDefinition } from "graphql/metafieldQueries";
 
-export const loadDmus = async (
+export const loadDmusHumanReadable = async (
+  admin: AdminApiContext<RestResources>,
   storeId: string,
 ): Promise<DiscountMetafields[]> => {
   const dmus = await prisma.dmu.findMany({
@@ -9,13 +14,26 @@ export const loadDmus = async (
     },
   });
 
-  return dmus.map((dmu) => {
-    return {
+  let humanReadableDmus = [];
+  for (const dmu of dmus) {
+    const discount = await getDiscountWithId({
+      admin: admin,
+      id: dmu.discount_id,
+    });
+
+    const metafieldDefinition = await getMetafieldDefinition({
+      admin: admin,
+      id: dmu.metafield_definition_id,
+    });
+
+    humanReadableDmus.push({
       dmuId: dmu.id,
-      discount: dmu.discount_id,
-      metafieldNamespaceKey: `${dmu.metafield_definition_id}.${dmu.metafield_definition_id}`,
+      discount: discount.automaticDiscount.title,
+      metafieldNamespaceKey: `${metafieldDefinition.namespace}.${metafieldDefinition.key}`,
       value: dmu.metafield_value,
       active: dmu.active,
-    };
-  });
+    });
+  }
+
+  return humanReadableDmus;
 };

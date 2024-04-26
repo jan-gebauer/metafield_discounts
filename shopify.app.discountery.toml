@@ -3,7 +3,7 @@
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
 handle = "discountery"
-application_url = "https://compatible-her-presentation-ld.trycloudflare.com"
+application_url = "https://sent-involving-excitement-friday.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://compatible-her-presentation-ld.trycloudflare.com/auth/callback",
-  "https://compatible-her-presentation-ld.trycloudflare.com/auth/shopify/callback",
-  "https://compatible-her-presentation-ld.trycloudflare.com/api/auth/callback"
+  "https://sent-involving-excitement-friday.trycloudflare.com/auth/callback",
+  "https://sent-involving-excitement-friday.trycloudflare.com/auth/shopify/callback",
+  "https://sent-involving-excitement-friday.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

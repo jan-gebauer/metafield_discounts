@@ -46,7 +46,7 @@ export const getDiscountWithId = async ({
   admin: AdminApiContext<RestResources>;
   id: string;
 }) => {
-  return await admin.graphql(
+  const response = await admin.graphql(
     `#graphql
       query automaticDiscountNode($id: ID!) {
         automaticDiscountNode(id: $id) {
@@ -66,4 +66,6 @@ export const getDiscountWithId = async ({
       },
     },
   );
+  const json = await response.json();
+  return json.data.automaticDiscountNode;
 };

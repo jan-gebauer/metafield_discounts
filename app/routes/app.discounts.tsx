@@ -15,7 +15,7 @@ import {
 } from "@shopify/polaris";
 import { authenticate } from "~/shopify.server";
 import DmusOverviewTable from "./app.discounts/DmusOverviewTable";
-import { loadDmus } from "./app.discounts/loadDiscountMetafields";
+import { loadDmusHumanReadable } from "./app.discounts/loadDiscountMetafields";
 import { getStoreId } from "graphql/storeQueries";
 
 export type DiscountMetafields = {
@@ -37,7 +37,7 @@ export const loader = async ({
   const storeJson = await storeRequest.json();
   const storeId = storeJson.data.shop.id;
 
-  return await loadDmus(storeId);
+  return await loadDmusHumanReadable(admin, storeId);
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

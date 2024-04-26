@@ -44,7 +44,7 @@ export const getMetafieldDefinition = async ({
   admin: AdminApiContext<RestResources>;
   id: String;
 }) => {
-  return await admin.graphql(
+  const response = await admin.graphql(
     `#graphql
       query metafieldDefinition($id: ID!) {
         metafieldDefinition(id: $id) {
@@ -60,4 +60,6 @@ export const getMetafieldDefinition = async ({
       },
     },
   );
+  const json = await response.json();
+  return json.data.metafieldDefinition;
 };
