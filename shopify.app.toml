@@ -1,8 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "d63795b18383bbb6a9c746f28913a79c"
-name = "discounterY"
-application_url = "https://since-kenneth-portion-reservations.trycloudflare.com"
+client_id = "b3fd28c598851912e5da46b0017abb6a"
+name = "Metafield Discounts"
+handle = "metafield-discounts"
+application_url = "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/"
 embedded = true
 
 [build]
@@ -16,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://since-kenneth-portion-reservations.trycloudflare.com/auth/callback",
-  "https://since-kenneth-portion-reservations.trycloudflare.com/auth/shopify/callback",
-  "https://since-kenneth-portion-reservations.trycloudflare.com/api/auth/callback"
+  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/callback"
+  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/shopify/callback"
+  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/api/auth/callback"
 ]
 
 [webhooks]
