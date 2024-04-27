@@ -3,7 +3,7 @@
 client_id = "b3fd28c598851912e5da46b0017abb6a"
 name = "Metafield Discounts"
 handle = "metafield-discounts"
-application_url = "https://tank-mounting-implications-aerospace.trycloudflare.com"
+application_url = "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/"
 embedded = true
 
 [build]
@@ -17,13 +17,13 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://tank-mounting-implications-aerospace.trycloudflare.com/auth/callback",
-  "https://tank-mounting-implications-aerospace.trycloudflare.com/auth/shopify/callback",
-  "https://tank-mounting-implications-aerospace.trycloudflare.com/api/auth/callback"
+  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/callback"
+  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/shopify/callback"
+  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/api/auth/callback"
 ]
 
 [webhooks]
-api_version = "2024-04"
+api_version = "2024-01"
 
 [pos]
 embedded = false
