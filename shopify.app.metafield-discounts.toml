@@ -17,8 +17,8 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/callback"
-  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/shopify/callback"
+  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/callback",
+  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/shopify/callback",
   "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/api/auth/callback"
 ]
 
