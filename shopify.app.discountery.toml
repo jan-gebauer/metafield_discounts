@@ -3,7 +3,7 @@
 client_id = "d63795b18383bbb6a9c746f28913a79c"
 name = "discounterY"
 handle = "discountery"
-application_url = "https://extends-nodes-philosophy-exactly.trycloudflare.com"
+application_url = "https://summaries-acm-zero-situations.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://extends-nodes-philosophy-exactly.trycloudflare.com/auth/callback",
-  "https://extends-nodes-philosophy-exactly.trycloudflare.com/auth/shopify/callback",
-  "https://extends-nodes-philosophy-exactly.trycloudflare.com/api/auth/callback"
+  "https://summaries-acm-zero-situations.trycloudflare.com/auth/callback",
+  "https://summaries-acm-zero-situations.trycloudflare.com/auth/shopify/callback",
+  "https://summaries-acm-zero-situations.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
