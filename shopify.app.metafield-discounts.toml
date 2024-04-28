@@ -3,7 +3,7 @@
 client_id = "b3fd28c598851912e5da46b0017abb6a"
 name = "Metafield Discounts"
 handle = "metafield-discounts"
-application_url = "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/"
+application_url = "https://karma-doing-jaguar-husband.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/callback",
-  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/auth/shopify/callback",
-  "https://metafield-discounts-9dbd3fc5b6f2.herokuapp.com/api/auth/callback"
+  "https://karma-doing-jaguar-husband.trycloudflare.com/auth/callback",
+  "https://karma-doing-jaguar-husband.trycloudflare.com/auth/shopify/callback",
+  "https://karma-doing-jaguar-husband.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

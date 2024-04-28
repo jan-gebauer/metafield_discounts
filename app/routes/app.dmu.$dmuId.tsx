@@ -17,6 +17,7 @@ import {
 } from "graphql/productQueries";
 import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/dist/ts/server/clients";
 import { authenticate } from "~/shopify.server";
+import prisma from "~/db.server";
 
 export type DmuPackage = {
   dmu: Dmu;

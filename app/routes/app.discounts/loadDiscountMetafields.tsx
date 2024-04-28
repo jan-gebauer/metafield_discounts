@@ -3,6 +3,7 @@ import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
 import { getDiscountWithId } from "graphql/discountQueries";
 import { getMetafieldDefinition } from "graphql/metafieldQueries";
 import { AdminApiContext } from "node_modules/@shopify/shopify-app-remix/dist/ts/server/clients";
+import prisma from "~/db.server";
 
 export const loadDmusHumanReadable = async (
   admin: AdminApiContext<RestResources>,
