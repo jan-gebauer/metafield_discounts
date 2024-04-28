@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  redirect,
+} from "@remix-run/node";
 import { Outlet, useNavigate, useSubmit } from "@remix-run/react";
 import {
   Card,
@@ -21,6 +26,10 @@ const metafieldName = "Binding Mount";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
+
+  if (process.env.NODE_ENV == "production") {
+    redirect("/app");
+  }
 
   return null;
 };
