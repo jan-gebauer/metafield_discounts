@@ -118,9 +118,7 @@ export default function NewDiscountPage() {
         <Layout.Section>
           <Card>
             <BlockStack gap="300">
-              <Button onClick={() => navigate(`/app/discounts`)}>
-                Stop creation
-              </Button>
+              <Button onClick={() => navigate(`/app`)}>Stop creation</Button>
               <Form
                 onSubmit={() => {
                   submit(

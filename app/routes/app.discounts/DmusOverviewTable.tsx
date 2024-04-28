@@ -1,6 +1,6 @@
 import { NavigateFunction, useNavigate } from "@remix-run/react";
 import { Card, BlockStack, IndexTable } from "@shopify/polaris";
-import { DiscountMetafields } from "../app.discounts";
+import { DiscountMetafields } from "../app._index";
 
 const buildRows = (
   data: DiscountMetafields[],

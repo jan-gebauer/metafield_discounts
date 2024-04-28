@@ -76,7 +76,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (request.method == "DELETE") {
     console.log("deleting");
-    toggleDmu(admin, dmuPackage, false);
+    await toggleDmu(admin, dmuPackage, false);
     await prisma.dmu.delete({
       where: {
         id: dmuPackage.dmu.id,
