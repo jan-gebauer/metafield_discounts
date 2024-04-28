@@ -23,7 +23,6 @@ export default function App() {
         <Link to="/app" rel="home">
           Home
         </Link>
-        <Link to="/app/discounts">Apply discount</Link>
         {process.env.NODE_ENV !== "production" ? (
           <Link to="/app/workflows">Workflows</Link>
         ) : null}

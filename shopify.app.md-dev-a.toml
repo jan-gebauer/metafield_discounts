@@ -3,7 +3,7 @@
 client_id = "44b9fa6ca1377f5079b7860180dbae1c"
 name = "MD Dev A"
 handle = "md-dev-a"
-application_url = "https://oxide-spine-begins-lots.trycloudflare.com"
+application_url = "https://editing-clarity-nec-nasdaq.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://oxide-spine-begins-lots.trycloudflare.com/auth/callback",
-  "https://oxide-spine-begins-lots.trycloudflare.com/auth/shopify/callback",
-  "https://oxide-spine-begins-lots.trycloudflare.com/api/auth/callback"
+  "https://editing-clarity-nec-nasdaq.trycloudflare.com/auth/callback",
+  "https://editing-clarity-nec-nasdaq.trycloudflare.com/auth/shopify/callback",
+  "https://editing-clarity-nec-nasdaq.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
