@@ -1,4 +1,5 @@
 import { ActionFunctionArgs, TypedResponse, json } from "@remix-run/node";
+import prisma from "~/db.server";
 
 export const persistDmu = async ({
   formData,
