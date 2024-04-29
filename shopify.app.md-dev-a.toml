@@ -3,7 +3,7 @@
 client_id = "44b9fa6ca1377f5079b7860180dbae1c"
 name = "MD Dev A"
 handle = "md-dev-a"
-application_url = "https://all-compact-vector-aka.trycloudflare.com"
+application_url = "https://rhode-duty-buffalo-done.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://all-compact-vector-aka.trycloudflare.com/auth/callback",
-  "https://all-compact-vector-aka.trycloudflare.com/auth/shopify/callback",
-  "https://all-compact-vector-aka.trycloudflare.com/api/auth/callback"
+  "https://rhode-duty-buffalo-done.trycloudflare.com/auth/callback",
+  "https://rhode-duty-buffalo-done.trycloudflare.com/auth/shopify/callback",
+  "https://rhode-duty-buffalo-done.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
