@@ -37,7 +37,6 @@ export default function DmusOverviewTable(props: {
 
   return (
     <Card>
-      <ui-title-bar title="Additional page" />
       <BlockStack gap="300">
         <IndexTable
           headings={[

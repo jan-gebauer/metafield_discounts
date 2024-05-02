@@ -103,7 +103,6 @@ export default function DiscountMetafield() {
 
   return (
     <Page>
-      <ui-title-bar title="DMU" />
       <Layout>
         <Layout.Section>
           <Card>

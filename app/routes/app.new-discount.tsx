@@ -113,7 +113,7 @@ export default function NewDiscountPage() {
   console.log(loadedData);
   return (
     <Page>
-      <ui-title-bar title="Additional page" />
+      <ui-title-bar title="New Discount Metafield coupling" />
       <Layout>
         <Layout.Section>
           <Card>
