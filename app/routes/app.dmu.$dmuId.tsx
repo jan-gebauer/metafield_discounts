@@ -87,7 +87,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (request.method == "POST") {
     console.log("toggling");
 
-    toggleDmu(admin, dmuPackage, !dmuPackage.dmu.active);
+    try {
+      toggleDmu(admin, dmuPackage, !dmuPackage.dmu.active);
+    } catch (e) {
+      console.log(e);
+    }
 
     return json({});
   }
@@ -188,12 +192,26 @@ const toggleDmu = async (
   const stringedMetafields = [...metafieldSet];
   let metafields: {
     productId: string;
-    namespace: string;
-    key: string;
-    value: string;
+    metafieldDefinitionNamespace: string;
+    metafieldDefinitionKey: string;
+    metafieldValue: string;
   }[] = stringedMetafields.map((metafield) => {
     return JSON.parse(metafield);
   });
+
+  console.log("filtering");
+  console.log(metafields);
+  console.log(dmuPackage);
+
+  const filteredMetafields = metafields.filter((metafield) => {
+    return (
+      metafield.metafieldDefinitionNamespace ==
+        dmuPackage.metafieldDefinition.namespace &&
+      metafield.metafieldDefinitionKey == dmuPackage.metafieldDefinition.key &&
+      metafield.metafieldValue == dmuPackage.metafieldValue
+    );
+  });
+  metafields = filteredMetafields;
 
   const productsToAdd = desiredState
     ? []
@@ -201,11 +219,21 @@ const toggleDmu = async (
   const productsToRemove = desiredState
     ? metafields.map((metafield) => metafield.productId)
     : [];
-  await requestDmuToggle(
+
+  console.log("products to add", productsToAdd);
+  console.log("products to remove", productsToRemove);
+  const requestResult = await requestDmuToggle(
     admin,
     dmuPackage.discount.id,
     productsToAdd,
     productsToRemove,
+  );
+
+  console.log("request result", requestResult);
+  const requestJson = await requestResult.json();
+  console.log(
+    "request json",
+    requestJson.data.discountAutomaticBasicUpdate.userErrors,
   );
 
   await prisma.dmu.update({

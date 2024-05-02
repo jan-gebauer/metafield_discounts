@@ -3,7 +3,7 @@
 client_id = "44b9fa6ca1377f5079b7860180dbae1c"
 name = "MD Dev A"
 handle = "md-dev-a"
-application_url = "https://rhode-duty-buffalo-done.trycloudflare.com"
+application_url = "https://weird-dui-taking-minister.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://rhode-duty-buffalo-done.trycloudflare.com/auth/callback",
-  "https://rhode-duty-buffalo-done.trycloudflare.com/auth/shopify/callback",
-  "https://rhode-duty-buffalo-done.trycloudflare.com/api/auth/callback"
+  "https://weird-dui-taking-minister.trycloudflare.com/auth/callback",
+  "https://weird-dui-taking-minister.trycloudflare.com/auth/shopify/callback",
+  "https://weird-dui-taking-minister.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
