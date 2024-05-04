@@ -109,13 +109,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function NewDiscountPage() {
   const navigate = useNavigate();
   const submit = useSubmit();
-  const [metafieldValue, setMetafieldValue] = useState("");
-  const [metafieldDefinition, setMetafieldDefinition] = useState("");
-  const [discount, setDiscount] = useState("");
   const loadedData: {
     discounts: { label: string; value: string }[];
     metafieldDefinitions: { label: string; value: string }[];
   } = useLoaderData();
+  const [metafieldDefinition, setMetafieldDefinition] = useState(
+    loadedData.metafieldDefinitions.at(0)?.value || "",
+  );
+  const [metafieldValue, setMetafieldValue] = useState("");
+  const [discount, setDiscount] = useState(
+    loadedData.discounts.at(0)?.value || "",
+  );
 
   console.log(loadedData);
   return (

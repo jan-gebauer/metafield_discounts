@@ -17,23 +17,29 @@ export const loadDmusHumanReadable = async (
 
   let humanReadableDmus = [];
   for (const dmu of dmus) {
-    const discount = await getDiscountWithId({
-      admin: admin,
-      id: dmu.discount_id,
-    });
+    try {
+      const discount = await getDiscountWithId({
+        admin: admin,
+        id: dmu.discount_id,
+      });
+      console.log(dmu.metafield_definition_id);
 
-    const metafieldDefinition = await getMetafieldDefinition({
-      admin: admin,
-      id: dmu.metafield_definition_id,
-    });
+      const metafieldDefinition = await getMetafieldDefinition({
+        admin: admin,
+        id: dmu.metafield_definition_id,
+      });
+      console.log(metafieldDefinition);
 
-    humanReadableDmus.push({
-      dmuId: dmu.id,
-      discount: discount.automaticDiscount.title,
-      metafieldNamespaceKey: `${metafieldDefinition.namespace}.${metafieldDefinition.key}`,
-      value: dmu.metafield_value,
-      active: dmu.active,
-    });
+      humanReadableDmus.push({
+        dmuId: dmu.id,
+        discount: discount.automaticDiscount.title,
+        metafieldNamespaceKey: `${metafieldDefinition.namespace}.${metafieldDefinition.key}`,
+        value: dmu.metafield_value,
+        active: dmu.active,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return humanReadableDmus;
