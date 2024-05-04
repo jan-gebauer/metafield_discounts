@@ -4,18 +4,16 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { Outlet, useNavigate, useSubmit } from "@remix-run/react";
+import { Outlet, useSubmit } from "@remix-run/react";
 import {
   Card,
   Layout,
   Page,
-  Text,
   BlockStack,
   Button,
   TextField,
   Form,
   FormLayout,
-  Grid,
 } from "@shopify/polaris";
 import { createProductWithMetafield as createProductWithTextMetafield } from "graphql/productQueries";
 import { useState } from "react";

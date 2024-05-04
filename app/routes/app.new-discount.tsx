@@ -121,7 +121,6 @@ export default function NewDiscountPage() {
     loadedData.discounts.at(0)?.value || "",
   );
 
-  console.log(loadedData);
   return (
     <Page>
       <ui-title-bar title="New Discount Metafield coupling" />

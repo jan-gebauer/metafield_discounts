@@ -5,8 +5,16 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { useLoaderData, useSubmit } from "@remix-run/react";
-import { BlockStack, Button, Card, Layout, Page } from "@shopify/polaris";
+import { useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import {
+  BlockStack,
+  Button,
+  Card,
+  InlineGrid,
+  Layout,
+  Page,
+  Spinner,
+} from "@shopify/polaris";
 import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
 import { getDiscountWithId } from "graphql/discountQueries";
 import { requestDmuToggle } from "graphql/dmuQueries";
@@ -75,7 +83,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const dmuPackage = JSON.parse(formDmu?.toString()!) as DmuPackage;
 
   if (request.method == "DELETE") {
-    console.log("deleting");
     await toggleDmu(admin, dmuPackage, false);
     await prisma.dmu.delete({
       where: {
@@ -85,8 +92,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return redirect("/app");
   }
   if (request.method == "POST") {
-    console.log("toggling");
-
     try {
       toggleDmu(admin, dmuPackage, !dmuPackage.dmu.active);
     } catch (e) {
@@ -104,6 +109,8 @@ export default function DiscountMetafield() {
 
   const formData = new FormData();
   formData.append("dmu", JSON.stringify(dmuPackage));
+
+  const navigation = useNavigation();
 
   return (
     <Page>
@@ -134,6 +141,20 @@ export default function DiscountMetafield() {
               >
                 Disable and Delete
               </Button>
+              <div
+                style={{
+                  display: "grid",
+                  placeItems: "center",
+                  height: "100%",
+                }}
+              >
+                {navigation.state == "submitting" ? (
+                  <Spinner
+                    accessibilityLabel="Spinner for your action"
+                    size="large"
+                  />
+                ) : null}
+              </div>
             </BlockStack>
           </Card>
         </Layout.Section>
@@ -199,10 +220,6 @@ const toggleDmu = async (
     return JSON.parse(metafield);
   });
 
-  console.log("filtering");
-  console.log(metafields);
-  console.log(dmuPackage);
-
   const filteredMetafields = metafields.filter((metafield) => {
     return (
       metafield.metafieldDefinitionNamespace ==
@@ -220,20 +237,11 @@ const toggleDmu = async (
     ? metafields.map((metafield) => metafield.productId)
     : [];
 
-  console.log("products to add", productsToAdd);
-  console.log("products to remove", productsToRemove);
   const requestResult = await requestDmuToggle(
     admin,
     dmuPackage.discount.id,
     productsToAdd,
     productsToRemove,
-  );
-
-  console.log("request result", requestResult);
-  const requestJson = await requestResult.json();
-  console.log(
-    "request json",
-    requestJson.data.discountAutomaticBasicUpdate.userErrors,
   );
 
   await prisma.dmu.update({

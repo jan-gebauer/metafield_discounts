@@ -22,13 +22,11 @@ export const loadDmusHumanReadable = async (
         admin: admin,
         id: dmu.discount_id,
       });
-      console.log(dmu.metafield_definition_id);
 
       const metafieldDefinition = await getMetafieldDefinition({
         admin: admin,
         id: dmu.metafield_definition_id,
       });
-      console.log(metafieldDefinition);
 
       humanReadableDmus.push({
         dmuId: dmu.id,

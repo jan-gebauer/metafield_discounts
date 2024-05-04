@@ -3,7 +3,7 @@
 client_id = "44b9fa6ca1377f5079b7860180dbae1c"
 name = "MD Dev A"
 handle = "md-dev-a"
-application_url = "https://ads-gradually-gave-fu.trycloudflare.com"
+application_url = "https://dame-briefing-treasure-focal.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://ads-gradually-gave-fu.trycloudflare.com/auth/callback",
-  "https://ads-gradually-gave-fu.trycloudflare.com/auth/shopify/callback",
-  "https://ads-gradually-gave-fu.trycloudflare.com/api/auth/callback"
+  "https://dame-briefing-treasure-focal.trycloudflare.com/auth/callback",
+  "https://dame-briefing-treasure-focal.trycloudflare.com/auth/shopify/callback",
+  "https://dame-briefing-treasure-focal.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

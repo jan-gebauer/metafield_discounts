@@ -7,9 +7,7 @@ const buildRows = (
   navigate: NavigateFunction,
   url: string,
 ) => {
-  console.log(data);
   const rows = data.map((discountMetafield, index) => {
-    console.log(discountMetafield);
     return (
       <IndexTable.Row
         id={discountMetafield.discount}
