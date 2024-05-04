@@ -1,5 +1,5 @@
 import { NavigateFunction, useNavigate } from "@remix-run/react";
-import { Card, BlockStack, IndexTable } from "@shopify/polaris";
+import { Card, BlockStack, IndexTable, Button } from "@shopify/polaris";
 import { DiscountMetafields } from "../app._index";
 
 const buildRows = (
@@ -22,6 +22,11 @@ const buildRows = (
           {discountMetafield.metafieldNamespaceKey}
         </IndexTable.Cell>
         <IndexTable.Cell>{discountMetafield.value}</IndexTable.Cell>
+        <IndexTable.Cell>
+          <Button onClick={() => navigate(`${url}/${discountMetafield.dmuId}`)}>
+            Open
+          </Button>
+        </IndexTable.Cell>
       </IndexTable.Row>
     );
   });
@@ -43,7 +48,9 @@ export default function DmusOverviewTable(props: {
             { title: "Discount" },
             { title: "Metafield" },
             { title: "Metafield value" },
+            { title: "" },
           ]}
+          selectable={false}
           itemCount={10}
           pagination={{
             // hasNext: pageInfo.hasNextPage,
