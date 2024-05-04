@@ -22,11 +22,6 @@ const buildRows = (
           {discountMetafield.metafieldNamespaceKey}
         </IndexTable.Cell>
         <IndexTable.Cell>{discountMetafield.value}</IndexTable.Cell>
-        <IndexTable.Cell>
-          <Button onClick={() => navigate(`${url}/${discountMetafield.dmuId}`)}>
-            Open
-          </Button>
-        </IndexTable.Cell>
       </IndexTable.Row>
     );
   });
@@ -48,9 +43,8 @@ export default function DmusOverviewTable(props: {
             { title: "Discount" },
             { title: "Metafield" },
             { title: "Metafield value" },
-            { title: "" },
           ]}
-          selectable={false}
+          selectable={true}
           itemCount={10}
           pagination={{
             // hasNext: pageInfo.hasNextPage,
