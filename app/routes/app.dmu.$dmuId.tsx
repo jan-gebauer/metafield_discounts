@@ -82,7 +82,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         id: dmuPackage.dmu.id,
       },
     });
-    return redirect("/app/discounts");
+    return redirect("/app");
   }
   if (request.method == "POST") {
     console.log("toggling");
