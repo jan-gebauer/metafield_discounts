@@ -31,5 +31,5 @@ export const persistDmu = async ({
     },
   });
 
-  return json({ union: persisted });
+  return json({ id: persisted.id });
 };

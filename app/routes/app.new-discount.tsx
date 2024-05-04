@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  redirect,
+} from "@remix-run/node";
 import {
   Outlet,
   useLoaderData,
@@ -96,7 +101,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   formData.append("storeId", storeId);
   const result = await persistDmu({ formData: formData });
 
-  return result;
+  const resultJson: any = await result.json();
+
+  return redirect(`/app/dmu/${resultJson.id}`);
 };
 
 export default function NewDiscountPage() {
