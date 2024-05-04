@@ -12,5 +12,6 @@ database.sqlite
 
 .env*
 shopify.app.*
+heroku.yml
 package-lock.json
 yarn.lock
