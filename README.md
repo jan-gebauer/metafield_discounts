@@ -1,6 +1,6 @@
 # Metafield Discounts
 
-Metafield Discounts is a Shopify App built using the standard Shopify Remix stack.
+Metafield Discounts is a Shopify App built using the standard Shopify TS Remix stack.
 
 ## What does it do?
 
