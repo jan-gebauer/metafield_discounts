@@ -5,7 +5,12 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import {
+  useActionData,
+  useLoaderData,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
 import {
   BlockStack,
   Button,
@@ -14,6 +19,7 @@ import {
   Layout,
   Page,
   Spinner,
+  Text,
 } from "@shopify/polaris";
 import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
 import { getDiscountWithId } from "graphql/discountQueries";
@@ -93,17 +99,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
   if (request.method == "POST") {
     try {
-      toggleDmu(admin, dmuPackage, !dmuPackage.dmu.active);
+      const result = toggleDmu(admin, dmuPackage, !dmuPackage.dmu.active);
+      return result;
     } catch (e) {
       console.log(e);
     }
-
-    return json({});
   }
 };
 
 export default function DiscountMetafield() {
   const dmuPackage: any = useLoaderData();
+  const toggleResult: { result: string; message: string } | undefined =
+    useActionData();
 
   const submit = useSubmit();
 
@@ -153,6 +160,11 @@ export default function DiscountMetafield() {
                     accessibilityLabel="Spinner for your action"
                     size="large"
                   />
+                ) : null}
+                {toggleResult && toggleResult.result == "unsuccessful" ? (
+                  <Text as="span" tone="critical">
+                    {toggleResult.message}
+                  </Text>
                 ) : null}
               </div>
             </BlockStack>
@@ -237,6 +249,14 @@ const toggleDmu = async (
     ? metafields.map((metafield) => metafield.productId)
     : [];
 
+  if (!productsToAdd.length && !productsToRemove.length) {
+    return {
+      result: "unsuccessful",
+      message:
+        "No products with the expected metafield value, check if metafield value is correct.",
+    };
+  }
+
   const requestResult = await requestDmuToggle(
     admin,
     dmuPackage.discount.id,
@@ -252,4 +272,9 @@ const toggleDmu = async (
       id: dmuPackage.dmu.id,
     },
   });
+
+  return {
+    result: "successful",
+    message: "DMU toggled successfully",
+  };
 };
