@@ -21,6 +21,7 @@ import {
   TextField,
   Select,
   SelectOption,
+  Tooltip,
 } from "@shopify/polaris";
 import { useState } from "react";
 import { authenticate } from "~/shopify.server";
@@ -148,12 +149,18 @@ export default function NewDiscountPage() {
                     onChange={(val) => setMetafieldDefinition(val)}
                     value={metafieldDefinition}
                   />
-                  <TextField
-                    label="Enter a metafield value"
-                    value={metafieldValue}
-                    onChange={setMetafieldValue}
-                    autoComplete="off"
-                  />
+                  <Tooltip
+                    content="If your metafield value has an automatically added unit, e.g. 123 mm, you don't need to add the unit."
+                    dismissOnMouseOut
+                  >
+                    {" "}
+                    <TextField
+                      label="Enter a metafield value"
+                      value={metafieldValue}
+                      onChange={setMetafieldValue}
+                      autoComplete="off"
+                    />
+                  </Tooltip>
                   <Select
                     label="Discount"
                     options={loadedData.discounts as SelectOption[]}
