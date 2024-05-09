@@ -15,12 +15,15 @@ import {
   BlockStack,
   Button,
   Card,
+  Icon,
   InlineGrid,
   Layout,
   Page,
   Spinner,
   Text,
+  Tooltip,
 } from "@shopify/polaris";
+import { QuestionCircleIcon } from "@shopify/polaris-icons";
 import { RestResources } from "@shopify/shopify-api/rest/admin/2024-01";
 import { getDiscountWithId } from "graphql/discountQueries";
 import { requestDmuToggle } from "graphql/dmuQueries";
@@ -44,6 +47,10 @@ export type DmuPackage = {
   };
   metafieldValue: string;
 };
+
+const toggleButtonMessage =
+  "Note that if a discount has only one product attached to it, " +
+  "this button will not work and you have to activate/deactive the discount on its own page.";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const { admin } = await authenticate.admin(request);
@@ -141,6 +148,9 @@ export default function DiscountMetafield() {
               >
                 {dmuPackage.dmu.active ? "Disable" : "Enable"}
               </Button>
+              <Tooltip content={toggleButtonMessage}>
+                <Icon source={QuestionCircleIcon} />
+              </Tooltip>
               <Button
                 onClick={() => {
                   submit(formData, { method: "DELETE" });
